@@ -292,7 +292,6 @@ class BasiliskConan(ConanFile):
         output, err = process.communicate()
         if err:
             print("Error %s while running %s" % (err.decode(), add_basilisk_module_command))
-            sys.exit(1)
         else:
             print("This resulted in the output: \n%s" % output.decode())
 
