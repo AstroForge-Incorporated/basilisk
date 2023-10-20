@@ -299,10 +299,11 @@ class BasiliskConan(ConanFile):
 
         process = subprocess.Popen(add_basilisk_module_command, stdout=subprocess.PIPE, stderr=subprocess.PIPE)
         output, err = process.communicate()
-        if err:
+        if process.returncode:
             print("Error %s while running %s" % (err.decode(), add_basilisk_module_command))
         else:
-            print("This resulted in the output: \n%s" % output.decode())
+            print("This resulted in the stdout: \n%s" % output.decode())
+            print("This resulted in the stderr: \n%s" % err.decode())
 
 if __name__ == "__main__":
     parser = argparse.ArgumentParser(description="Configure the Basilisk framework.")
