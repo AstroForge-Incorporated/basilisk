@@ -202,6 +202,7 @@ ARRAYINTASLIST(unsigned int)
         {
             PyObject *outObject = PyFloat_FromDouble($1[i][j]);
             PyList_Append(locRow, outObject);
+            Py_DECREF(outObject);
         }
         PyList_Append($result, locRow);
         Py_DECREF(locRow);
