@@ -43,7 +43,7 @@
             resOut = SWIG_ConvertPtr(o, &blankPtr,$1_descriptor, 0 |  0 );
             if (!SWIG_IsOK(resOut)) {
                 SWIG_exception_fail(SWIG_ArgError(resOut), "Could not convert that type into a pointer for some reason.  This is an ugly SWIG failure.  Good luck.\n");
-                Py_DECREF(o);
+                Py_DECREF(o); // Decrement count here in case of error
                 return NULL;
             }
             memcpy(&(temp[i]), blankPtr, sizeof(type));
@@ -109,10 +109,12 @@ ARRAYASLIST(unsigned int)
             resOut = SWIG_ConvertPtr(o, &blankPtr,$1_descriptor, 0 |  0 );
             if (!SWIG_IsOK(resOut)) {
                 SWIG_exception_fail(SWIG_ArgError(resOut), "Could not convert that type into a pointer for some reason.  This is an ugly SWIG failure.  Good luck.\n");
+                Py_DECREF(o); // Decrement count here in case of error
                 return NULL;
             }
             memcpy(&(temp[i]), blankPtr, sizeof(type));
         }
+        Py_DECREF(o);
     }
     $1 = temp;
 }
@@ -233,10 +235,11 @@ ARRAY2ASLIST(unsigned int)
         resOut = SWIG_ConvertPtr(o, &blankPtr,$1_descriptor, 0 |  0 );
         if (!SWIG_IsOK(resOut)) {
             SWIG_exception_fail(SWIG_ArgError(resOut), "Could not convert that type into a pointer for some reason.  This is an ugly SWIG failur Good luck.\n");
+            Py_DECREF(o);
             return NULL;
         }
         memcpy(&(temp[i]), blankPtr, sizeof(type));
-        
+        Py_DECREF(o);
     }
     $1 = temp;
 }
