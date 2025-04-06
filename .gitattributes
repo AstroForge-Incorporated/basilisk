@@ -13,3 +13,10 @@
 *.jpeg -text
 *.tiff -text
 *.zip -text
+*.c text eol=lf
+*.cpp text eol=lf
+*.h text eol=lf
+*.hpp text eol=lf
+*.i text eol=lf
+*.py text eol=lf
+*.tex text eol=lf
