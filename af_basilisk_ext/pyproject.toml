@@ -1,0 +1,15 @@
+[project]
+name = "af_basilisk_ext"
+version = "0.1.0"
+
+[tool.setuptools.packages.find]
+include = [
+    "af_basilisk_ext",
+    "af_basilisk_ext.*",
+    "ExternalModules.*",
+] # ["*"] by default
+
+
+[build-system]
+requires = ["setuptools"]
+build-backend = "setuptools.build_meta"
