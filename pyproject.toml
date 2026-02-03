@@ -12,7 +12,7 @@ requires = [
 ]
 
 [project]
-name        = 'Basilisk'
+name        = 'af-basilisk'
 dynamic     = ["version", "dependencies"]
 requires-python = ">=3.8, <3.14"
 
@@ -49,5 +49,9 @@ Basilisk = [
 ]
 
 [tool.setuptools.dynamic]
-version = {file = "docs/source/bskVersion.txt"}
 dependencies = {file = "requirements.txt"}
+
+[tool.setuptools_scm]
+# This enables git-based versioning
+# CI overrides with SETUPTOOLS_SCM_PRETEND_VERSION
+fallback_version = "0.0.0.dev0"
