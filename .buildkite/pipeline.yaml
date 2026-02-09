@@ -156,3 +156,5 @@ steps:
       - build-macos-wheel
       - build-linux-amd64-wheel
       - build-linux-aarch64-wheel
+
+    if: build.branch == "develop_updated" || build.tag != null
