@@ -1,5 +1,5 @@
 import numpy as np
-from ExternalModules.utils.math_utils import *
+from af_basilisk_ext.ExternalModules.utils.math_utils import *
 
 
 def test_mrp_to_quat():

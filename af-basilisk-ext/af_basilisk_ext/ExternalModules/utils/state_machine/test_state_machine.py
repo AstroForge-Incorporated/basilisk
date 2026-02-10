@@ -1,4 +1,4 @@
-from ExternalModules.utils.state_machine.state_machine_base import *
+from af_basilisk_ext.ExternalModules.utils.state_machine.state_machine_base import *
 
 
 def test_declared_transition():

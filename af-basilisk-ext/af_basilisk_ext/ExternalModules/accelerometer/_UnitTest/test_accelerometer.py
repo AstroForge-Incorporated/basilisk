@@ -10,7 +10,7 @@ from Basilisk.utilities import SimulationBaseClass
 from Basilisk.architecture import messaging
 
 from Basilisk.ExternalModules import accelerometer
-from ExternalModules.accelerometer import accel_config
+from af_basilisk_ext.ExternalModules.accelerometer import accel_config
 
 SEED = 3
 
