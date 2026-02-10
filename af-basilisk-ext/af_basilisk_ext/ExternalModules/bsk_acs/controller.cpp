@@ -2,18 +2,18 @@
 #include <stdexcept>
 #include <iostream>
 
+#include <string>
+
 #include "architecture/utilities/linearAlgebra.h"
 
 #include "../_GeneralModuleFiles/eigenSupport.h"
 
-std::filesystem::path CURRENT_DIR = std::filesystem::path(__FILE__).parent_path();
-const std::filesystem::path CONFIG_PATH = CURRENT_DIR / "config.toml";
-
 /// @brief Initializes attitude controller
+/// @param config_path : Path to config.toml file containing PID parameters
 /// @param extra_jitter : Decreases controller derivative gain to increase jitter. For use in testing Perception.
-AttitudeController::AttitudeController(bool extra_jitter) {
+AttitudeController::AttitudeController(const std::string& config_path, bool extra_jitter) {
     // Read in config
-    auto config = cpptoml::parse_file(CONFIG_PATH);
+    auto config = cpptoml::parse_file(config_path);
     auto params = config->get_table("pid-params");
 
     auto pid_p = params->get_as<double>("proportional_gain");

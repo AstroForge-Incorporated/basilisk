@@ -7,11 +7,12 @@
 #include "architecture/msgPayloadDefC/CmdTorqueBodyMsgPayload.h"
 #include "architecture/msgPayloadDefC/ArrayMotorTorqueMsgPayload.h"
 
+#include <string>
 #include "include/cpptoml.h"
 
 class AttitudeController: public SysModel {
     public:
-        AttitudeController(bool extra_jitter = false);
+        AttitudeController(const std::string& config_path, bool extra_jitter = false);
         ~AttitudeController() {};
         void Reset(uint64_t current_sim_nanos) {};
         void UpdateState(uint64_t current_sim_nanos);
