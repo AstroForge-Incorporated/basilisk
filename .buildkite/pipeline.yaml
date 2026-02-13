@@ -6,12 +6,12 @@ steps:
       arch: amd64
     command: |
       if [[ -n "$$BUILDKITE_TAG" ]]; then
-        export SETUPTOOLS_SCM_PRETEND_VERSION="$${BUILDKITE_TAG#v}"
+        export SETUPTOOLS_SCM_PRETEND_VERSION="$${BUILDKITE_TAG}"
       else
         LATEST_TAG=$$(git describe --tags --abbrev=0 2>/dev/null | sed 's/^v//')
         LATEST_TAG="$${LATEST_TAG:-0.0.0}"
 
-        if [[ "$$BUILDKITE_BRANCH" == "main" ]]; then
+        if [[ "$$BUILDKITE_BRANCH" == "develop_updated" ]]; then
           export SETUPTOOLS_SCM_PRETEND_VERSION="$${LATEST_TAG}.dev$${BUILDKITE_BUILD_NUMBER}"
         else
           export SETUPTOOLS_SCM_PRETEND_VERSION="$${LATEST_TAG}+g$${BUILDKITE_COMMIT:0:7}"
@@ -46,12 +46,12 @@ steps:
       arch: aarch64
     command: |
       if [[ -n "$$BUILDKITE_TAG" ]]; then
-        export SETUPTOOLS_SCM_PRETEND_VERSION="$${BUILDKITE_TAG#v}"
+        export SETUPTOOLS_SCM_PRETEND_VERSION="$${BUILDKITE_TAG}"
       else
         LATEST_TAG=$$(git describe --tags --abbrev=0 2>/dev/null | sed 's/^v//')
         LATEST_TAG="$${LATEST_TAG:-0.0.0}"
 
-        if [[ "$$BUILDKITE_BRANCH" == "main" ]]; then
+        if [[ "$$BUILDKITE_BRANCH" == "develop_updated" ]]; then
           export SETUPTOOLS_SCM_PRETEND_VERSION="$${LATEST_TAG}.dev$${BUILDKITE_BUILD_NUMBER}"
         else
           export SETUPTOOLS_SCM_PRETEND_VERSION="$${LATEST_TAG}+g$${BUILDKITE_COMMIT:0:7}"
@@ -82,12 +82,12 @@ steps:
     key: build-macos-wheel
     command: |
       if [[ -n "$$BUILDKITE_TAG" ]]; then
-        export SETUPTOOLS_SCM_PRETEND_VERSION="$${BUILDKITE_TAG#v}"
+        export SETUPTOOLS_SCM_PRETEND_VERSION="$${BUILDKITE_TAG}"
       else
         LATEST_TAG=$$(git describe --tags --abbrev=0 2>/dev/null | sed 's/^v//')
         LATEST_TAG="$${LATEST_TAG:-0.0.0}"
 
-        if [[ "$$BUILDKITE_BRANCH" == "main" ]]; then
+        if [[ "$$BUILDKITE_BRANCH" == "develop_updated" ]]; then
           export SETUPTOOLS_SCM_PRETEND_VERSION="$${LATEST_TAG}.dev$${BUILDKITE_BUILD_NUMBER}"
         else
           export SETUPTOOLS_SCM_PRETEND_VERSION="$${LATEST_TAG}+g$${BUILDKITE_COMMIT:0:7}"
