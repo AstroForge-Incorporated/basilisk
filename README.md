@@ -1,5 +1,18 @@
 # README
 
+### Astroforge-Specific
+
+#### How to build a wheel file?
+
+Note: Assumes that [uv](https://docs.astral.sh/uv/getting-started/installation/) is installed
+
+```
+./build_wheel.sh
+```
+
+This will generate a wheel file in the `dist/` folder.  The file will be versioned according to the current git tag or the commits since the most recent tag.
+
+
 ## Basilisk
 
 * [Summary of Basilisk](docs/source/index.rst)
