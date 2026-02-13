@@ -1,0 +1,6 @@
+title = "Attitude Controller Parameters"
+
+[pid-params]
+proportional_gain = 3.0
+derivative_gain = 3.0
+derivative_gain_extra_jitter = 0.1

@@ -1,0 +1,28 @@
+[project]
+name = "af-basilisk-ext"
+dynamic     = ["version", "dependencies"]
+description = "AstroForge Extensions for Basilisk"
+
+[tool.setuptools.packages.find]
+include = [
+    "af_basilisk_ext",
+    "af_basilisk_ext.*",
+    "ExternalModules.*",
+] # ["*"] by default
+
+[tool.setuptools.package-data]
+af_basilisk_ext = [
+    "af_basilisk_ext/ExternalModules/bsk_acs/config.toml"
+]
+
+[build-system]
+requires = [
+    "setuptools>=70.1.0,<=78.1.0",  # Required for "bdist_wheel" to work correctly.
+    "setuptools-scm>=8.0,<=8.2.1",  # Automatically include all Git-controlled files in sdist
+]
+build-backend = "setuptools.build_meta"
+
+[tool.setuptools_scm]
+# This enables git-based versioning
+# CI overrides with SETUPTOOLS_SCM_PRETEND_VERSION
+fallback_version = "0.0.0.dev0"
