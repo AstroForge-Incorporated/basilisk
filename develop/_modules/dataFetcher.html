@@ -208,6 +208,16 @@
     <span class="k">return</span> <span class="n">rel</span><span class="p">[</span><span class="nb">len</span><span class="p">(</span><span class="n">prefix</span><span class="p">)</span> <span class="p">:]</span> <span class="k">if</span> <span class="n">rel</span><span class="o">.</span><span class="n">startswith</span><span class="p">(</span><span class="n">prefix</span><span class="p">)</span> <span class="k">else</span> <span class="n">rel</span>
 
 
+<div class="viewcode-block" id="local_support_path">
+<a class="viewcode-back" href="../Documentation/utilities/supportDataTools/dataFetcher.html#dataFetcher.local_support_path">[docs]</a>
+<span class="k">def</span><span class="w"> </span><span class="nf">local_support_path</span><span class="p">(</span><span class="n">rel</span><span class="p">:</span> <span class="nb">str</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Optional</span><span class="p">[</span><span class="n">Path</span><span class="p">]:</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;Return the local filesystem path for a registry-style key, if available.&quot;&quot;&quot;</span>
+    <span class="k">if</span> <span class="ow">not</span> <span class="n">LOCAL_SUPPORT</span><span class="p">:</span>
+        <span class="k">return</span> <span class="kc">None</span>
+    <span class="k">return</span> <span class="n">LOCAL_SUPPORT</span> <span class="o">/</span> <span class="n">_local_rel</span><span class="p">(</span><span class="n">rel</span><span class="p">)</span></div>
+
+
+
 <div class="viewcode-block" id="get_path">
 <a class="viewcode-back" href="../Documentation/utilities/supportDataTools/dataFetcher.html#dataFetcher.get_path">[docs]</a>
 <span class="k">def</span><span class="w"> </span><span class="nf">get_path</span><span class="p">(</span><span class="n">file_enum</span><span class="p">:</span> <span class="n">Enum</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Path</span><span class="p">:</span>
@@ -221,18 +231,11 @@
     <span class="n">rel</span> <span class="o">=</span> <span class="n">relpath</span><span class="p">(</span><span class="n">file_enum</span><span class="p">)</span>
 
     <span class="k">if</span> <span class="n">LOCAL_SUPPORT</span><span class="p">:</span>
-        <span class="n">local</span> <span class="o">=</span> <span class="n">LOCAL_SUPPORT</span> <span class="o">/</span> <span class="n">_local_rel</span><span class="p">(</span><span class="n">rel</span><span class="p">)</span>
+        <span class="n">local</span> <span class="o">=</span> <span class="n">local_support_path</span><span class="p">(</span><span class="n">rel</span><span class="p">)</span>
         <span class="k">if</span> <span class="n">local</span><span class="o">.</span><span class="n">exists</span><span class="p">():</span>
             <span class="k">return</span> <span class="n">local</span>
 
-        <span class="c1"># When running locally, allow remote fetch for external URLs like the</span>
-        <span class="c1"># large NAIF kernels not included in the repo.</span>
-        <span class="k">if</span> <span class="n">rel</span> <span class="ow">in</span> <span class="n">EXTERNAL_KERNEL_URLS</span><span class="p">:</span>
-            <span class="k">return</span> <span class="n">Path</span><span class="p">(</span><span class="n">POOCH</span><span class="o">.</span><span class="n">fetch</span><span class="p">(</span><span class="n">rel</span><span class="p">))</span>
-
-        <span class="k">raise</span> <span class="ne">FileNotFoundError</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Support data file not found in local repo: </span><span class="si">{</span><span class="n">local</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
-
-    <span class="c1"># No local repo - fetch from remote (installed from wheel)</span>
+    <span class="c1"># No local repo or missing local file so fetch from remote</span>
     <span class="k">try</span><span class="p">:</span>
         <span class="k">return</span> <span class="n">Path</span><span class="p">(</span><span class="n">POOCH</span><span class="o">.</span><span class="n">fetch</span><span class="p">(</span><span class="n">rel</span><span class="p">))</span>
     <span class="k">except</span> <span class="ne">Exception</span> <span class="k">as</span> <span class="n">e</span><span class="p">:</span>
@@ -302,7 +305,7 @@
         <span class="n">VESTA20H</span> <span class="o">=</span> <span class="s2">&quot;VESTA20H.txt&quot;</span>
 
     <span class="k">class</span><span class="w"> </span><span class="nc">MagneticFieldData</span><span class="p">(</span><span class="n">Enum</span><span class="p">):</span>
-        <span class="n">WMM</span> <span class="o">=</span> <span class="s2">&quot;WMM.COF&quot;</span>
+        <span class="n">WMM</span> <span class="o">=</span> <span class="s2">&quot;WMM2025.COF&quot;</span>
 
     <span class="k">class</span><span class="w"> </span><span class="nc">SkyBrightnessData</span><span class="p">(</span><span class="n">Enum</span><span class="p">):</span>
         <span class="n">skyTemperature408MHz</span> <span class="o">=</span> <span class="s2">&quot;haslam408_dsds_Remazeilles2014.fits&quot;</span>
