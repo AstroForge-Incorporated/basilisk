@@ -675,7 +675,7 @@ if(WIN32 AND (Python3_VERSION VERSION_GREATER 3.8))
        "from Basilisk.architecture import messaging\n"
        "try:\n"
        "    from importlib.metadata import version as _pkg_version\n"
-       "    __version__ = _pkg_version('bsk')\n"
+       "    __version__ = _pkg_version('af-basilisk')\n"
        "except Exception:\n"
        "    __version__ = '0.0.0'\n")
 else()
@@ -683,7 +683,7 @@ else()
       "from Basilisk.architecture import messaging # ensure recorders() work without first importing messaging\n"
       "try:\n"
       "    from importlib.metadata import version as _pkg_version\n"
-      "    __version__ = _pkg_version('bsk')\n"
+      "    __version__ = _pkg_version('af-basilisk')\n"
       "except Exception:\n"
       "    __version__ = '0.0.0'\n")
 endif()
