@@ -77,6 +77,13 @@ public:
     virtual ~MJJoint() {}
 
     /**
+     * @brief Retrieves the body that this joint is attached to
+     *
+     * @return Reference to the `MJScene`.
+     */
+    MJBody& getBody() { return this->body; }
+
+    /**
      * @brief Configures the joint within a given MuJoCo model.
      *
      * @param m Pointer to the MuJoCo model used for configuration.
@@ -89,7 +96,7 @@ protected:
      *
      * Throws an exception if initialization has not been completed.
      */
-    void checkInitialized();
+    void checkInitialized() const;
 
 protected:
     MJBody& body; ///< Reference to the body the joint is attached to.
@@ -123,6 +130,20 @@ public:
     MJScalarJoint(mjsJoint* joint, MJBody& body);
 
     /**
+     * @brief Returns the axis of rotation for hinge joints and the direction
+     * of translation for slide joints.
+     *
+     * Returned vector is normalized.
+     */
+    Eigen::Vector3d getAxis() const;
+
+    /**
+     * @brief Returns true if this is a rotational joint, false if it's a
+     * translational slide joint.
+     */
+    bool isHinge() const;
+
+    /**
      * @brief Sets the position of the joint.
      *
      * For revolute joints, this is the angle (in radians) of the joint with respect
@@ -145,6 +166,18 @@ public:
      * @param value The desired velocity value.
      */
     void setVelocity(double value);
+
+    /**
+     * @brief Returns the equality constraint object associated with this scalar joint.
+     *
+     * The returned MJSingleJointEquality can be used to enforce a specific state
+     * for the joint within the MuJoCo simulation. This is typically used when the
+     * joint is constrained to follow a particular position or velocity, as specified
+     * by an input message or control logic.
+     *
+     * @return The MJSingleJointEquality object for this joint.
+     */
+    MJSingleJointEquality getConstrainedEquality();
 
     /**
      * @brief Configures the scalar joint within the given MuJoCo model.

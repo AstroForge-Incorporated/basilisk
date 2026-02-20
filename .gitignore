@@ -54,9 +54,19 @@ supportData/EphemerisData/*.bsp
 venv/
 .venv/
 
-# VSCode
+# VSCode / VS
 .devcontainer
+*.vs/
+*.vscode_debug_path/
+lib/*
 
 # Python packaging
 *.egg-info
 build/
+!.github/actions/build/
+!.github/actions/build/**
+
+# Documentation
+!docs/source/Build/
+
+*.git-template
