@@ -157,4 +157,4 @@ steps:
       - build-linux-amd64-wheel
       - build-linux-aarch64-wheel
 
-    if: build.branch == "develop_updated" || build.tag != null
+    if: build.branch == "develop_updated" || build.tag != null || build.source == "ui"
