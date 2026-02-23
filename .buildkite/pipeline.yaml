@@ -5,19 +5,20 @@ steps:
       os: linux
       arch: amd64
     command: |
-      if [[ -n "$$BUILDKITE_TAG" ]]; then
-        VERSION="$${BUILDKITE_TAG}"
-      else
-        LATEST_TAG=$$(git describe --tags --abbrev=0 2>/dev/null | sed 's/^v//')
-        LATEST_TAG="$${LATEST_TAG:-0.0.0}"
+      LATEST_TAG=$$(git describe --tags --abbrev=0 2>/dev/null | sed 's/^v//')
+      LATEST_TAG="$${LATEST_TAG:-0.0.0}"
 
-        if [[ "$$BUILDKITE_BRANCH" == "develop_updated" ]]; then
-          VERSION="$${LATEST_TAG}.dev$${BUILDKITE_BUILD_NUMBER}"
-        else
-          VERSION="$${LATEST_TAG}+g$${BUILDKITE_COMMIT:0:7}"
-        fi
+      if [[ -n "$$BUILDKITE_TAG" ]]; then
+        # Tagged release
+        SETUPTOOLS_SCM_PRETEND_VERSION="$$BUILDKITE_TAG"
+      elif [[ "$$BUILDKITE_BRANCH" == "develop_updated" ]]; then
+        # Main branch
+        SETUPTOOLS_SCM_PRETEND_VERSION="$${LATEST_TAG}.dev$${BUILDKITE_BUILD_NUMBER}"
+      else
+        # Feature branches
+        SETUPTOOLS_SCM_PRETEND_VERSION="$${LATEST_TAG}.dev$${BUILDKITE_BUILD_NUMBER}+g$${BUILDKITE_COMMIT:0:7}"
       fi
 
-      echo "Version: $${VERSION}"
-      sed "s/__WHEEL_VERSION__/$${VERSION}/g" .buildkite/build-steps.yaml \
+      echo "Version: $${SETUPTOOLS_SCM_PRETEND_VERSION}"
+      sed "s/__WHEEL_VERSION__/$${SETUPTOOLS_SCM_PRETEND_VERSION}/g" .buildkite/build-steps.yaml \
         | buildkite-agent pipeline upload
