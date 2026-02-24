@@ -252,36 +252,32 @@ def run(show_plots):
         array2ElementList.append(prescribedMotionStateEffector.PrescribedMotionStateEffector())
         array1ElementList[i].ModelTag = "array1Element" + str(i + 1)
         array2ElementList[i].ModelTag = "array2Element" + str(i + 1)
-        array1ElementList[i].mass = mass_element  # [kg]
-        array2ElementList[i].mass = mass_element  # [kg]
-        array1ElementList[i].IPntPc_P = IElement_PntPc_P  # [kg m^2]
-        array2ElementList[i].IPntPc_P = IElement_PntPc_P  # [kg m^2]
-        array1ElementList[i].r_MB_B = r_M1B_B  # [m]
-        array2ElementList[i].r_MB_B = r_M2B_B  # [m]
-        array1ElementList[i].r_PcP_P = [- radius_array * np.cos(72 * macros.D2R),
+        array1ElementList[i].setMass(mass_element)  # [kg]
+        array2ElementList[i].setMass(mass_element)  # [kg]
+        array1ElementList[i].setIPntPc_P(IElement_PntPc_P)  # [kg m^2]
+        array2ElementList[i].setIPntPc_P(IElement_PntPc_P)  # [kg m^2]
+        array1ElementList[i].setR_MB_B(r_M1B_B)  # [m]
+        array2ElementList[i].setR_MB_B(r_M2B_B)  # [m]
+        array1ElementList[i].setR_PcP_P([- radius_array * np.cos(72 * macros.D2R),
                                         0.0,
-                                        (1/3) * radius_array * np.sin(72 * macros.D2R)]  # [m] For triangular wedge
-        array2ElementList[i].r_PcP_P = [radius_array * np.cos(72 * macros.D2R),
+                                        (1/3) * radius_array * np.sin(72 * macros.D2R)])  # [m] For triangular wedge
+        array2ElementList[i].setR_PcP_P([radius_array * np.cos(72 * macros.D2R),
                                         0.0,
-                                        (1/3) * radius_array * np.sin(72 * macros.D2R)]  # [m] For triangular wedge
-        array1ElementList[i].r_PM_M = r_PM1_M1Init1  # [m]
-        array2ElementList[i].r_PM_M = r_PM2_M2Init1  # [m]
-        array1ElementList[i].rPrime_PM_M = np.array([0.0, 0.0, 0.0])  # [m/s]
-        array2ElementList[i].rPrime_PM_M = np.array([0.0, 0.0, 0.0])  # [m/s]
-        array1ElementList[i].rPrimePrime_PM_M = np.array([0.0, 0.0, 0.0])  # [m/s^2]
-        array2ElementList[i].rPrimePrime_PM_M = np.array([0.0, 0.0, 0.0])  # [m/s^2]
-        array1ElementList[i].omega_PM_P = np.array([0.0, 0.0, 0.0])  # [rad/s]
-        array2ElementList[i].omega_PM_P = np.array([0.0, 0.0, 0.0])  # [rad/s]
-        array1ElementList[i].omegaPrime_PM_P = np.array([0.0, 0.0, 0.0])  # [rad/s^2]
-        array2ElementList[i].omegaPrime_PM_P = np.array([0.0, 0.0, 0.0])  # [rad/s^2]
-        array1ElementList[i].sigma_PM = sigma_PM1Init1
-        array2ElementList[i].sigma_PM = sigma_PM2Init1
-        array1ElementList[i].omega_MB_B = [0.0, 0.0, 0.0]  # [rad/s]
-        array2ElementList[i].omega_MB_B = [0.0, 0.0, 0.0]  # [rad/s]
-        array1ElementList[i].omegaPrime_MB_B = [0.0, 0.0, 0.0]  # [rad/s^2]
-        array2ElementList[i].omegaPrime_MB_B = [0.0, 0.0, 0.0]  # [rad/s^2]
-        array1ElementList[i].sigma_MB = [0.0, 0.0, 0.0]
-        array2ElementList[i].sigma_MB = [0.0, 0.0, 0.0]
+                                        (1/3) * radius_array * np.sin(72 * macros.D2R)])  # [m] For triangular wedge
+        array1ElementList[i].setR_PM_M(r_PM1_M1Init1)  # [m]
+        array2ElementList[i].setR_PM_M(r_PM2_M2Init1)  # [m]
+        array1ElementList[i].setRPrime_PM_M(np.array([0.0, 0.0, 0.0]))  # [m/s]
+        array2ElementList[i].setRPrime_PM_M(np.array([0.0, 0.0, 0.0]))  # [m/s]
+        array1ElementList[i].setRPrimePrime_PM_M(np.array([0.0, 0.0, 0.0]))  # [m/s^2]
+        array2ElementList[i].setRPrimePrime_PM_M(np.array([0.0, 0.0, 0.0]))  # [m/s^2]
+        array1ElementList[i].setOmega_PM_P(np.array([0.0, 0.0, 0.0]))  # [rad/s]
+        array2ElementList[i].setOmega_PM_P(np.array([0.0, 0.0, 0.0]))  # [rad/s]
+        array1ElementList[i].setOmegaPrime_PM_P(np.array([0.0, 0.0, 0.0]))  # [rad/s^2]
+        array2ElementList[i].setOmegaPrime_PM_P(np.array([0.0, 0.0, 0.0]))  # [rad/s^2]
+        array1ElementList[i].setSigma_PM(sigma_PM1Init1)
+        array2ElementList[i].setSigma_PM(sigma_PM2Init1)
+        array1ElementList[i].setSigma_MB([0.0, 0.0, 0.0])
+        array2ElementList[i].setSigma_MB([0.0, 0.0, 0.0])
 
         scObject.addStateEffector(array1ElementList[i])
         scObject.addStateEffector(array2ElementList[i])
@@ -453,25 +449,27 @@ def run(show_plots):
         array1MaxRotAccelList2.append(thetaDDotMax)
 
     # Update the array 1 stand-alone element translational state messages
-    array1ElementTranslationMessageData = messaging.PrescribedTranslationMsgPayload()
-    array1ElementTranslationMessageData.r_PM_M = r_PM1_M1Init2  # [m]
-    array1ElementTranslationMessageData.rPrime_PM_M = np.array([0.0, 0.0, 0.0])  # [m/s]
-    array1ElementTranslationMessageData.rPrimePrime_PM_M = np.array([0.0, 0.0, 0.0])  # [m/s^2]
+    array1ElementTranslationMessageData = messaging.PrescribedTranslationMsgPayload(
+        r_PM_M=r_PM1_M1Init2,   # [m]
+        rPrime_PM_M=np.array([0.0, 0.0, 0.0]),  # [m/s]
+        rPrimePrime_PM_M=np.array([0.0, 0.0, 0.0]),  # [m/s^2]
+    )
     array1ElementTranslationMessage = messaging.PrescribedTranslationMsg().write(array1ElementTranslationMessageData)
 
     array1ElementRefMsgList2 = list()
     for i in range(num_elements):
         array1ElementList[i].prescribedTranslationInMsg.subscribeTo(array1ElementTranslationMessage)
-        array1ElementList[i].r_PcP_P = [0.0, 0.0, - (2/3) * radius_array * np.sin(72 * macros.D2R)]
-        array1ElementList[i].r_PM_M = r_PM1_M1Init2  # [m]
-        array1ElementList[i].sigma_PM = sigma_PM1Init2
+        array1ElementList[i].setR_PcP_P([0.0, 0.0, - (2/3) * radius_array * np.sin(72 * macros.D2R)])
+        array1ElementList[i].setR_PM_M(r_PM1_M1Init2)  # [m]
+        array1ElementList[i].setSigma_PM(sigma_PM1Init2)
 
         array1RotProfilerList[i].setThetaInit(array1ThetaInit2)  # [rad]
         array1RotProfilerList[i].setThetaDDotMax(array1MaxRotAccelList2[i])  # [rad/s^2]
 
-        array1ElementMessageData = messaging.HingedRigidBodyMsgPayload()
-        array1ElementMessageData.theta = (36 * i * macros.D2R) + array1ThetaInit2  # [rad]
-        array1ElementMessageData.thetaDot = 0.0  # [rad/s]
+        array1ElementMessageData = messaging.HingedRigidBodyMsgPayload(
+            theta=(36 * i * macros.D2R) + array1ThetaInit2,  # [rad]
+            thetaDot=0.0,  # [rad/s]
+        )
         array1ElementRefMsgList2.append(messaging.HingedRigidBodyMsg().write(array1ElementMessageData))
 
         array1RotProfilerList[i].spinningBodyInMsg.subscribeTo(array1ElementRefMsgList2[i])
@@ -493,9 +491,10 @@ def run(show_plots):
     for i in range(num_elements):
         array2RotProfilerList[i].setThetaDDotMax(array2MaxRotAccelList2[i])  # [rad/s^2]
 
-        array2ElementMessageData = messaging.HingedRigidBodyMsgPayload()
-        array2ElementMessageData.theta = array2ThetaInit2  # [rad]
-        array2ElementMessageData.thetaDot = 0.0  # [rad/s]
+        array2ElementMessageData = messaging.HingedRigidBodyMsgPayload(
+            theta=array2ThetaInit2,  # [rad]
+            thetaDot=0.0,   # [rad/s]
+        )
         array2ElementRefMsgList2.append(messaging.HingedRigidBodyMsg().write(array2ElementMessageData))
 
         array2RotProfilerList[i].spinningBodyInMsg.subscribeTo(array2ElementRefMsgList2[i])
@@ -514,25 +513,27 @@ def run(show_plots):
         array2MaxRotAccelList3.append(thetaDDotMax)
 
     # Update the array 2 stand-alone element translational state messages
-    array2ElementTranslationMessageData = messaging.PrescribedTranslationMsgPayload()
-    array2ElementTranslationMessageData.r_PM_M = r_PM2_M2Init2  # [m]
-    array2ElementTranslationMessageData.rPrime_PM_M = np.array([0.0, 0.0, 0.0])  # [m/s]
-    array2ElementTranslationMessageData.rPrimePrime_PM_M = np.array([0.0, 0.0, 0.0])  # [m/s^2]
+    array2ElementTranslationMessageData = messaging.PrescribedTranslationMsgPayload(
+        r_PM_M=r_PM2_M2Init2,   # [m]
+        rPrime_PM_M=np.array([0.0, 0.0, 0.0]),   # [m/s]
+        rPrimePrime_PM_M=np.array([0.0, 0.0, 0.0]),   # [m/s^2]
+    )
     array2ElementTranslationMessage = messaging.PrescribedTranslationMsg().write(array2ElementTranslationMessageData)
 
     array2ElementRefMsgList3 = list()
     for i in range(num_elements):
         array2ElementList[i].prescribedTranslationInMsg.subscribeTo(array2ElementTranslationMessage)
-        array2ElementList[i].r_PcP_P = [0.0, 0.0, - (2/3) * radius_array * np.sin(72 * macros.D2R)]
-        array2ElementList[i].r_PM_M = r_PM2_M2Init2  # [m]
-        array2ElementList[i].sigma_PM = sigma_PM2Init2
+        array2ElementList[i].setR_PcP_P([0.0, 0.0, - (2/3) * radius_array * np.sin(72 * macros.D2R)])
+        array2ElementList[i].setR_PM_M(r_PM2_M2Init2)  # [m]
+        array2ElementList[i].setSigma_PM(sigma_PM2Init2)
 
         array2RotProfilerList[i].setThetaInit(array2ThetaInit2)  # [rad]
         array2RotProfilerList[i].setThetaDDotMax(array2MaxRotAccelList3[i])  # [rad/s^2]
 
-        array2ElementMessageData = messaging.HingedRigidBodyMsgPayload()
-        array2ElementMessageData.theta = (36 * i * macros.D2R) + array2ThetaInit2  # [rad]
-        array2ElementMessageData.thetaDot = 0.0  # [rad/s]
+        array2ElementMessageData = messaging.HingedRigidBodyMsgPayload(
+            theta=(36 * i * macros.D2R) + array2ThetaInit2,   # [rad]
+            thetaDot=0.0,   # [rad/s]
+        )
         array2ElementRefMsgList3.append(messaging.HingedRigidBodyMsg().write(array2ElementMessageData))
 
         array2RotProfilerList[i].spinningBodyInMsg.subscribeTo(array2ElementRefMsgList3[i])

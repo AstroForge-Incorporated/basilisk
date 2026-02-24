@@ -19,6 +19,77 @@ Release Notes
     - Continue to refine and improve the interactive information panels
     - Save streamed data to file to avoid unbounded memory usage when viewing live data
 
+**Version 2.3.2 (December 2025)**
+
+- Added ability to set the displayed osculating orbit range to desired max and min range from current true
+  anomaly. Range setting will be applied to primary body relative and spacecraft relative osculating orbits.
+- Added a message setting, ``OsculatingOrbitLineRange``, to allow scripted setting of range and modified
+  Settings panel to allow user to set the range at runtime. If old ``RelativeOrbitRange`` message setting is set
+  and ``OsculatingOrbitLineRange`` is not, range will be set to +/- ``RelativeOrbitRange``.
+  If both ``RelativeOrbitRange`` and ``OsculatingOrbitLineRange`` are set, the values in
+  ``OsculatingOrbitLineRange`` will be applied.
+- Added Ground Track lines for osculating orbit calculations to display the spacecraft’s track along the
+  primary body’s surface in its fixed frame. Added new message setting, ``OsculatingGroundTrackRange``, to allow
+  user to script the range around the current true anomaly to be displayed. Added ground track range input
+  fields to the Settings panel to allow user to set the range at runtime.
+- Added ``GroundTrackLineColor`` setting to the Spacecraft message to allow user to change the color of
+  each spacecraft’s line as desired during scenario
+- Added settings message field ``ShowOsculatingGroundTrackLines`` to allow user to turn ground tracks on at start.
+  Added toggle under View menu to allow user to toggle osculating ground track lines at runtime.
+- Added settings message field ``ShowTruePathGroundTrackLines`` to allow user to turn view of true
+  path trajectory history as a ground track on spacecraft’s primary body at start. Added toggle under View
+  menu to allow user to toggle true path ground track lines at runtime.
+- Added handling for corrupted message files. If the file does not contain a minimum of two parsable
+  vizMessages, an error message will be displayed and user will be allowed to select a different message file.
+- Changed how ``File>LoadScenarioFile`` works to take user directly to FileBrowser panel. Selected file in
+  FileBrowser will automatically be loaded.
+- Added hot key “f” to bring up FileBrowser panel to load new file when user is playing back message
+  files (not compatible with live streaming).
+- FileBrowser will start in directory of last file load in current Vizard instance instead of the first file
+  load of current Vizard instance.
+- Added playback control settings to ``LiveSettings`` to allow scripting of file playback by user. At any time
+  step, user can pause the playback, switch between playback in real time and playback at frame rate, and select
+  the current playback multiplier to be used. The playback multiplier is applied as an exponent (i.e. sending the
+  value 3 will result in 2^3 or 8x playback speed. Note: To return to 1x playback speed, user needs to request
+  the playback mode (-1 to playback at frame rate, or +1 to playback in real time) as sending a 0 as the
+  ``PlaybackMultiplier`` cannot be acted on as it is the protobuffer default setting.
+
+
+**Version 2.3.1 (Oct. 17, 2025)**
+
+- Added persistent settings for all Settings panels settings (can be reset to Vizard default) so that
+  once a user customizes a setting it will be applied for any future runs unless overridden by a
+  setting in the current playback file
+- Added option to display the view from an Instrument Camera or Standard Camera inside the
+  frustum HUD instead of only on panel, added VizSetting field and toggle to Camera menu to ``ViewCameraViewHUD``
+- Added frame around base of camera frustum HUD
+- Made Location updates on-demand instead of requiring all Locations to be updated every frame
+- Added goToMsg input/display and +/- buttons on ``VizMessageDisplay`` panel
+- Fixed bug with main camera jitter while following spacecraft in Hill Frame at slower playback speeds
+- Improved lock-out of main camera movement/target selection when interacting with UI elements
+- Fixed bug with settings panel sun intensity not affecting light brightness
+- Fixed bug with celestial body orbit lines when effector was selected as camera target
+- Added line renderer width setting and on/off setting for coordinate frames, target lines, and
+  pointing vectors to ``VizSettingsPb`` and Settings panel
+- Added line renderers to Pointing Vectors
+- Added line renderers to Coordinate Frames
+- Added line renderers to TargetLines
+- Fixed bug when adding Pointing Vectors from messages that caused lines to fail
+- Fixed orbit line line renderer artifact
+- Improved setting of line renderer thickness for HUD elements (particularly for small sats)
+- Fixed issue with QuadMap labels on spacecraft not checking for visibility correctly
+- Fixed bug when canceling out of file browser that allowed user to try and load an empty string
+- Fixed bug with Location MarkerScale not being applied correctly during initialization of Location
+- Added check to disable atmosphere shader for supported celestial bodies when radiusRatio set too low
+  for shader to work properly
+- Increased pixel width of transceiver communication HUD rings for better visibility
+- Improved appearance of dropdown menu scrollbars
+- Added call to clear current thruster particle plumes onscreen when thruster settings are changed
+- Reset to default message buffer size when loading a new playback file
+- Migrated Vizard to Unity 6000.0.58f2 to ensure patch for security vulnerability will be included in
+  Vizard 2.3.1 release
+- fixed memory leak when saving camera images to file
+
 
 **Version 2.3.0 (July 11, 2025)**
 
@@ -150,7 +221,7 @@ Release Notes
 
     - depth map shader color output values are being adjusted by Unity after being written by fragment shader,
       resulting in incorrect depth measurements using the three-channel decoding
-    - The use of ``vizInterface.opNavMode`` is now depreciated.  See :ref:`vizardLiveComm` for more
+    - The use of ``vizInterface.opNavMode`` is now deprecated.  See :ref:`vizardLiveComm` for more
       information.  The setting ``opNavMode=1`` is now ``liveStream`` and ``opNavMode=2`` is now ``noDisplay``.
 
 **Version 2.1.6.1 (March 20, 2024)**

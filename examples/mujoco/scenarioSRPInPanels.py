@@ -204,7 +204,7 @@ def run(initialSpin: bool = False, showPlots: bool = False, visualize: bool = Fa
         # is along the positive z-axis.
         srpModel.normalVector_B = [0, 0, 1]
 
-        # We assume that sunlight is comming from the sun positioned
+        # We assume that sunlight is coming from the sun positioned
         # in the infinite positive x-axis direction (so the sunlight
         # direction in the inertial frame is along the negative z-axis).
         # A better simulation would use SPICE to compute this direction.
@@ -364,8 +364,7 @@ class SRPPanel(sysModel.SysModel):
         cosAngle = np.dot(-normalVector_N, self.sunlightDirection_N)
         forceMagnitude = self.srpFactor * cosAngle**2
 
-        payload = messaging.SingleActuatorMsgPayload()
-        payload.input = forceMagnitude
+        payload = messaging.SingleActuatorMsgPayload(input=forceMagnitude)
         self.forceOutMsg.write(payload, CurrentSimNanos, self.moduleID)
 
 
