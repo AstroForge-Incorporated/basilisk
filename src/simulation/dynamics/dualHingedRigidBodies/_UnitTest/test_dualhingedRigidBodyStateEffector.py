@@ -260,7 +260,7 @@ def dualHingedRigidBodyTest(show_plots, useFlag, testCase):
     return [testFailCount, ''.join(testMessages)]
 
 
-@pytest.mark.parametrize("useScPlus", [True])
+@pytest.mark.parametrize("useScPlus", [True, False])
 def test_dualHingedRigidBodyMotorTorque(show_plots, useScPlus):
     """Module Unit Test"""
     [testResults, testMessage] = dualHingedRigidBodyMotorTorque(show_plots, useScPlus)

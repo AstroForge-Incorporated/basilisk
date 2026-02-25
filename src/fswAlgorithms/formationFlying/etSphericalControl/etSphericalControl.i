@@ -17,10 +17,6 @@
 
  */
 %module etSphericalControl
-
-%include "architecture/utilities/bskException.swg"
-%default_bsk_exception();
-
 %{
    #include "etSphericalControl.h"
 %}

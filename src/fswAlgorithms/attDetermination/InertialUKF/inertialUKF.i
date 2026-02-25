@@ -17,10 +17,6 @@
 
  */
 %module inertialUKF
-
-%include "architecture/utilities/bskException.swg"
-%default_bsk_exception();
-
 %{
    #include "inertialUKF.h"
    #include "architecture/utilities/ukfUtilities.h"
@@ -60,3 +56,4 @@ struct LowPassFilterData;
 import sys
 protectAllClasses(sys.modules[__name__])
 %}
+

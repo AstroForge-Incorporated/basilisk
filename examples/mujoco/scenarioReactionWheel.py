@@ -169,8 +169,10 @@ def run(showPlots: bool = False, visualize: bool = False):
     # input to the system. In this case, the actuator is a motor
     # that applies a torque to the 'wheel_1' joint.
     torque = 2 # N*m
+    TorqueAtSiteMsgPayload = messaging.SingleActuatorMsgPayload()
+    TorqueAtSiteMsgPayload.input = torque
     torqueMsg = messaging.SingleActuatorMsg()
-    torqueMsg.write(messaging.SingleActuatorMsgPayload(input=torque))
+    torqueMsg.write(TorqueAtSiteMsgPayload)
 
     # Subscribe the actuator to the torque message.
     scene.getSingleActuator("wheel_1").actuatorInMsg.subscribeTo(torqueMsg)
@@ -208,7 +210,9 @@ def run(showPlots: bool = False, visualize: bool = False):
     scSim.ExecuteSimulation()
 
     # Change the torque to -2 N*m
-    torqueMsg.write(messaging.SingleActuatorMsgPayload(input=-torque))
+    TorqueAtSiteMsgPayload = messaging.SingleActuatorMsgPayload()
+    TorqueAtSiteMsgPayload.input = -torque
+    torqueMsg.write(TorqueAtSiteMsgPayload)
 
     # Run the simulation for another 60 seconds
     scSim.ConfigureStopTime(macros.sec2nano(2 * tf))

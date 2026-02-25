@@ -17,10 +17,6 @@
 
  */
 %module sunlineUKF
-
-%include "architecture/utilities/bskException.swg"
-%default_bsk_exception();
-
 %{
    #include "sunlineUKF.h"
    #include "architecture/utilities/ukfUtilities.h"
@@ -44,3 +40,4 @@ struct CSSConfigMsg_C;
 import sys
 protectAllClasses(sys.modules[__name__])
 %}
+

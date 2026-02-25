@@ -17,10 +17,6 @@
 
  */
 %module vehicleConfigData
-
-%include "architecture/utilities/bskException.swg"
-%default_bsk_exception();
-
 %{
    #include "vehicleConfigData.h"
 %}

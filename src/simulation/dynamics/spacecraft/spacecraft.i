@@ -18,10 +18,6 @@
  */
 
 %module spacecraft
-
-%include "architecture/utilities/bskException.swg"
-%default_bsk_exception();
-
 %{
    #include "spacecraft.h"
    #include "../_GeneralModuleFiles/hubEffector.h"

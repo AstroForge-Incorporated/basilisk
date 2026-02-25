@@ -34,7 +34,7 @@
 #include "architecture/messaging/messaging.h"
 
 /*! @brief translating body structure */
-struct TranslatingBody {
+struct translatingBody {
 public:
     /** setter for `mass` property */
     void setMass(double mass);
@@ -79,7 +79,7 @@ public:
     Eigen::Matrix3d getDCM_FP() const {return dcm_FP;};
 
 private:
-    friend class LinearTranslationNDOFStateEffector;
+    friend class linearTranslationNDOFStateEffector;
 
     // user-defined properties
     double mass = 0.0;             //!< [kg] mass of translating arm
@@ -135,11 +135,11 @@ private:
 };
 
 /*! @brief translating body state effector class */
-class LinearTranslationNDOFStateEffector: public StateEffector, public SysModel {
+class linearTranslationNDOFStateEffector: public StateEffector, public SysModel {
 public:
 
-    LinearTranslationNDOFStateEffector();         //!< -- Constructor
-    ~LinearTranslationNDOFStateEffector() final;  //!< -- Destructor
+    linearTranslationNDOFStateEffector();         //!< -- Constructor
+    ~linearTranslationNDOFStateEffector() final;  //!< -- Destructor
 
     std::vector<Message<LinearTranslationRigidBodyMsgPayload>*> translatingBodyOutMsgs;       //!< vector of state output messages
     std::vector<Message<SCStatesMsgPayload>*> translatingBodyConfigLogOutMsgs;                //!< vector of translating body state config log messages
@@ -148,9 +148,7 @@ public:
     ReadFunctor<ArrayEffectorLockMsgPayload> motorLockInMsg;          //!< -- (optional) motor lock input message name
 
     /** method for adding a new translating body */
-    void addTranslatingBody(const std::shared_ptr<TranslatingBody> newBody);
-    /** method for getting an indexed translating body */
-    std::shared_ptr<TranslatingBody> getTranslatingBody(uint64_t index);
+    void addTranslatingBody(translatingBody const& newBody);
     /** setter for `nameOfRhoState` property */
     void setNameOfRhoState(const std::string& nameOfRhoState) { this->nameOfRhoState = nameOfRhoState; };
     /** setter for `nameOfRhoDotState` property */
@@ -163,7 +161,7 @@ public:
 private:
     static uint64_t effectorID;    //!< [] ID number of this effector
     int N = 0;    //!< -- number of translating body axes defined in the system
-    std::vector<std::shared_ptr<TranslatingBody>> translatingBodyVec; //!< -- vector of TB effector structs
+    std::vector<translatingBody> translatingBodyVec; //!< -- vector of TB effector structs
 
     // Terms needed for back substitution
     Eigen::MatrixXd ARho;     //!< -- rDDot_BN term for back substitution

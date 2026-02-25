@@ -27,7 +27,6 @@ import os
 
 import numpy as np
 import pytest
-from contextlib import nullcontext
 
 filename = inspect.getframeinfo(inspect.currentframe()).filename
 path = os.path.dirname(os.path.abspath(filename))
@@ -42,7 +41,6 @@ from Basilisk.utilities import unitTestSupport                  # general suppor
 from Basilisk.simulation import planetEphemeris
 from Basilisk.utilities import macros
 from Basilisk.architecture import bskLogging
-from Basilisk.architecture.bskLogging import BasiliskError
 
 
 # Uncomment this line is this test is to be skipped in the global unit test run, adjust message as needed.
@@ -62,10 +60,8 @@ from Basilisk.architecture.bskLogging import BasiliskError
 def test_module(show_plots, setRAN, setDEC, setLST, setRate):
     """Module Unit Test"""
     # each test method requires a single assert method to be called
-    expect_error = any([setRAN, setDEC, setLST, setRate]) and not all([setRAN, setDEC, setLST, setRate])
-    with pytest.raises(BasiliskError) if expect_error else nullcontext():
-        [testResults, testMessage] = planetEphemerisTest(show_plots, setRAN, setDEC, setLST, setRate)
-        assert testResults < 1, testMessage
+    [testResults, testMessage] = planetEphemerisTest(show_plots, setRAN, setDEC, setLST, setRate)
+    assert testResults < 1, testMessage
 
 
 def planetEphemerisTest(show_plots, setRAN, setDEC, setLST, setRate):

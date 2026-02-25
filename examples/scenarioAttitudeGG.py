@@ -236,8 +236,8 @@ def run(show_plots):
     #
 
     # create the FSW vehicle configuration message
-    # use the same inertia in the FSW algorithm as in the simulation
-    vehicleConfigOut = messaging.VehicleConfigMsgPayload(ISCPntB_B=I)
+    vehicleConfigOut = messaging.VehicleConfigMsgPayload()
+    vehicleConfigOut.ISCPntB_B = I  # use the same inertia in the FSW algorithm as in the simulation
     vcMsg = messaging.VehicleConfigMsg().write(vehicleConfigOut)
 
     # connect messages
@@ -251,13 +251,10 @@ def run(show_plots):
     extFTObject.cmdTorqueInMsg.subscribeTo(mrpControl.cmdTorqueOutMsg)
 
     # if this scenario is to interface with the BSK Viz, uncomment the following lines
-    if vizSupport.vizFound:
-        viz = vizSupport.enableUnityVisualization(scSim, simTaskName, scObject
-                                                  , modelDictionaryKeyList="6USat"
-                                                  # , saveFile=fileName
-                                                  )
-        viz.settings.linesAndFramesLineWidth = 2
-        viz.settings.spacecraftCSon = True
+    vizSupport.enableUnityVisualization(scSim, simTaskName, scObject
+                                        , modelDictionaryKeyList="6USat"
+                                        # , saveFile=fileName
+                                        )
 
     #
     #   initialize Simulation

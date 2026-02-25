@@ -17,10 +17,6 @@
 
  */
 %module dvGuidance
-
-%include "architecture/utilities/bskException.swg"
-%default_bsk_exception();
-
 %{
    #include "dvGuidance.h"
 %}
@@ -37,3 +33,4 @@ struct DvBurnCmdMsg_C;
 import sys
 protectAllClasses(sys.modules[__name__])
 %}
+

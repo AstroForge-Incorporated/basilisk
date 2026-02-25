@@ -18,10 +18,6 @@
 */
 
 %module lambertSurfaceRelativeVelocity
-
-%include "architecture/utilities/bskException.swg"
-%default_bsk_exception();
-
 %{
     #include "lambertSurfaceRelativeVelocity.h"
 %}

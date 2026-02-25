@@ -37,12 +37,7 @@
 #ifndef SOLAR_FLUX_EARTH
 #define SOLAR_FLUX_EARTH    1372.5398 /* [W/m^2] solar flux at earth */
 #endif
-#ifndef CMB_TEMPERATURE
-#define CMB_TEMPERATURE      2.725 /* [K] cosmic microwave background temperature */
-#endif
-#ifndef K_BOLTZMANN
-#define K_BOLTZMANN       1.38064852e-23 /* [J/K] Boltzmann's constant */
-#endif
+
 
 /* common conversions */
 #ifndef MPI

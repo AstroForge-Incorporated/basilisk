@@ -17,10 +17,6 @@
 
  */
 %module prescribedRotation1DOF
-
-%include "architecture/utilities/bskException.swg"
-%default_bsk_exception();
-
 %{
     #include "prescribedRotation1DOF.h"
 %}
@@ -39,8 +35,6 @@ from Basilisk.architecture.swig_common_model import *
 struct HingedRigidBodyMsg_C;
 %include "architecture/msgPayloadDefC/PrescribedRotationMsgPayload.h"
 struct PrescribedRotationMsg_C;
-%include "architecture/msgPayloadDefC/PrescribedTranslationMsgPayload.h"
-struct PrescribedTranslationMsg_C;
 
 %pythoncode %{
 import sys

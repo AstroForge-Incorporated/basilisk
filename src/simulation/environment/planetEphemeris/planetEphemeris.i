@@ -17,10 +17,6 @@
 
  */
 %module planetEphemeris
-
-%include "architecture/utilities/bskException.swg"
-%default_bsk_exception();
-
 %{
    #include "planetEphemeris.h"
 %}
@@ -45,6 +41,14 @@ namespace std {
 
 %include "architecture/msgPayloadDefC/SpicePlanetStateMsgPayload.h"
 struct SpicePlanetStateMsg_C;
+
+%include "swig_deprecated.i"
+%deprecated_function(ClassicElementsMsgPayload, "2025/09/02", "Replace ClassicElementsMsgPayload() with ClassicalElements() defined in orbitalMotion")
+%inline %{
+    ClassicElements ClassicElementsMsgPayload() {
+        return (ClassicElements());
+    }
+%}
 
 %pythoncode %{
 import sys

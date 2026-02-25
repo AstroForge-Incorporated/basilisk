@@ -17,10 +17,6 @@
 
  */
 %module headingSuKF
-
-%include "architecture/utilities/bskException.swg"
-%default_bsk_exception();
-
 %{
    #include "headingSuKF.h"
    #include "architecture/utilities/ukfUtilities.h"
@@ -44,3 +40,4 @@ struct CameraConfigMsg_C;
 import sys
 protectAllClasses(sys.modules[__name__])
 %}
+

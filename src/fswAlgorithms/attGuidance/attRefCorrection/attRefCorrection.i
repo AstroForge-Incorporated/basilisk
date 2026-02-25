@@ -18,10 +18,6 @@
 */
 
 %module attRefCorrection
-
-%include "architecture/utilities/bskException.swg"
-%default_bsk_exception();
-
 %{
     #include "attRefCorrection.h"
 %}
@@ -40,3 +36,4 @@ struct AttRefMsg_C;
 import sys
 protectAllClasses(sys.modules[__name__])
 %}
+

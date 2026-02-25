@@ -17,10 +17,6 @@
 
  */
 %module rwMotorVoltage
-
-%include "architecture/utilities/bskException.swg"
-%default_bsk_exception();
-
 %{
    #include "rwMotorVoltage.h"
 %}

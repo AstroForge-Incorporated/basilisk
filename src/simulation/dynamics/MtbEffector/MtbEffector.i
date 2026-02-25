@@ -18,10 +18,6 @@
 */
 
 %module MtbEffector
-
-%include "architecture/utilities/bskException.swg"
-%default_bsk_exception();
-
 %{
     #include "MtbEffector.h"
 %}

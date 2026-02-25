@@ -17,12 +17,8 @@
 
  */
 %module ephemNavConverter
-
-%include "architecture/utilities/bskException.swg"
-%default_bsk_exception();
-
 %{
-   #include "ephemNavConverter.h"
+   #include "ephemNavConverter.h"   
 %}
 
 %include "swig_c_wrap.i"
@@ -37,3 +33,4 @@ struct EphemerisMsg_C;
 import sys
 protectAllClasses(sys.modules[__name__])
 %}
+

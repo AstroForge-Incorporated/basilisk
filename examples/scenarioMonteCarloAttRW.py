@@ -580,8 +580,8 @@ def createScenarioAttitudeFeedbackRW():
     #
 
     # create the FSW vehicle configuration message
-    # use the same inertia in the FSW algorithm as in the simulation
-    vehicleConfigOut = messaging.VehicleConfigMsgPayload(ISCPntB_B=I)
+    vehicleConfigOut = messaging.VehicleConfigMsgPayload()
+    vehicleConfigOut.ISCPntB_B = I  # use the same inertia in the FSW algorithm as in the simulation
     vcMsg = messaging.VehicleConfigMsg().write(vehicleConfigOut)
 
     # FSW RW configuration message

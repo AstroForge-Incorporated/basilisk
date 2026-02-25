@@ -66,7 +66,9 @@ def setThrusterForce(
     """Writes the ``input`` argument of the given messages with
     the values in ``thrust``."""
     for msg, val in zip(msgs, thrust):
-        msg.write(messaging.SingleActuatorMsgPayload(input=val))
+        forceMsgPayload = messaging.SingleActuatorMsgPayload()
+        forceMsgPayload.input = val
+        msg.write(forceMsgPayload)
 
 
 def run(showPlots: bool = False, visualize: bool = False):

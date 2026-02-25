@@ -174,8 +174,8 @@ def run(show_plots):
     attError.attNavInMsg.subscribeTo(sNavObject.attOutMsg)
 
     # create the FSW vehicle configuration message
-    # use the same inertia in the FSW algorithm as in the simulation
-    vehicleConfigOut = messaging.VehicleConfigMsgPayload(ISCPntB_B=I)
+    vehicleConfigOut = messaging.VehicleConfigMsgPayload()
+    vehicleConfigOut.ISCPntB_B = I  # use the same inertia in the FSW algorithm as in the simulation
     vcMsg = messaging.VehicleConfigMsg().write(vehicleConfigOut)
 
     # setup the MRP Feedback control module

@@ -231,7 +231,8 @@ def run(show_plots, rFirst, rSecond):
 
     # Override information with SPICE
     timeInitString = "2021 MAY 04 07:47:48.965 (UTC)"
-    gravFactory.createSpiceInterface(time=timeInitString,
+    gravFactory.createSpiceInterface(bskPath + '/supportData/EphemerisData/',
+                                     timeInitString,
                                      epochInMsg=True)
     gravFactory.spiceObject.zeroBase = 'Earth'
     gravFactory.addBodiesTo(scObject)
@@ -323,8 +324,8 @@ def run(show_plots, rFirst, rSecond):
     scSim.AddModelToTask(fswTaskName, rwMotorTorqueObj)
 
     # Create the FSW vehicle configuration message
-    # use the same inertia in the FSW algorithm as in the simulation
-    vehicleConfigOut = messaging.VehicleConfigMsgPayload(ISCPntB_B=I)
+    vehicleConfigOut = messaging.VehicleConfigMsgPayload()
+    vehicleConfigOut.ISCPntB_B = I  # use the same inertia in the FSW algorithm as in the simulation
     vcMsg = messaging.VehicleConfigMsg().write(vehicleConfigOut)
 
     # Create the FSW reaction wheel configuration message

@@ -18,10 +18,6 @@
 */
 
 %module torque2Dipole
-
-%include "architecture/utilities/bskException.swg"
-%default_bsk_exception();
-
 %{
     #include "torque2Dipole.h"
 %}
@@ -43,3 +39,4 @@ struct CmdTorqueBodyMsg_C;
 import sys
 protectAllClasses(sys.modules[__name__])
 %}
+

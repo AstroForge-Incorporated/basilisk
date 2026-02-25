@@ -83,8 +83,8 @@ def run():
 
 
 class TestPythonModule(sysModel.SysModel):
-    def __init__(self):
-        super().__init__()
+    def __init__(self, *args):
+        super().__init__(*args)
         self.dataInMsg = messaging.CModuleTemplateMsgReader()
         self.dataOutMsg = messaging.CModuleTemplateMsg()
 

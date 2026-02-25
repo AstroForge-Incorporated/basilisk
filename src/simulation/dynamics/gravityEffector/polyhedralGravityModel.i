@@ -18,10 +18,6 @@
  */
 
 %module(package="Basilisk.simulation") polyhedralGravityModel
-
-%include "architecture/utilities/bskException.swg"
-%default_bsk_exception();
-
 %{
    #include "simulation/dynamics/gravityEffector/polyhedralGravityModel.h"
    #include <memory>

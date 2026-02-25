@@ -81,12 +81,9 @@ np.set_printoptions(precision=16)
 
 # import general simulation support files
 from Basilisk.utilities import SimulationBaseClass
-from Basilisk.utilities import (
-    unitTestSupport,
-)  # general support file with common unit test functions
+from Basilisk.utilities import unitTestSupport  # general support file with common unit test functions
 import matplotlib.pyplot as plt
 from Basilisk.utilities import macros
-from Basilisk.utilities.supportDataTools.dataFetcher import get_path, DataFile
 
 # import simulation related support
 from Basilisk.simulation import spacecraft
@@ -109,7 +106,6 @@ from Basilisk.utilities import vizSupport
 # The path to the location of Basilisk
 # Used to get the location of supporting data.
 from Basilisk import __path__
-
 bskPath = __path__[0]
 fileName = os.path.basename(os.path.splitext(__file__)[0])
 
@@ -131,7 +127,7 @@ def run(show_plots):
     scSim = SimulationBaseClass.SimBaseClass()
 
     # set the simulation time variable used later on
-    simulationTime = macros.min2nano(10.0)
+    simulationTime = macros.min2nano(10.)
 
     #
     #  create the simulation process
@@ -139,7 +135,7 @@ def run(show_plots):
     dynProcess = scSim.CreateNewProcess(simProcessName)
 
     # create the dynamics task and specify the integration update time
-    simulationTimeStep = macros.sec2nano(0.1)
+    simulationTimeStep = macros.sec2nano(.1)
     dynProcess.addTask(scSim.CreateNewTask(simTaskName, simulationTimeStep))
 
     #
@@ -150,7 +146,9 @@ def run(show_plots):
     scObject = spacecraft.Spacecraft()
     scObject.ModelTag = "Hubble"
     # define the simulation inertia
-    I = [900.0, 0.0, 0.0, 0.0, 800.0, 0.0, 0.0, 0.0, 600.0]
+    I = [900., 0., 0.,
+         0., 800., 0.,
+         0., 0., 600.]
     scObject.hub.mHub = 750.0  # kg - spacecraft mass
     scObject.hub.IHubPntBc_B = unitTestSupport.np2EigenMatrix3d(I)
 
@@ -170,11 +168,10 @@ def run(show_plots):
     # setup spice library for Earth ephemeris and Hubble states
     timeInitString = "2015 February 10, 00:00:00.0 TDB"
     spiceObject = gravFactory.createSpiceInterface(time=timeInitString, epochInMsg=True)
-    spiceObject.zeroBase = "Earth"
+    spiceObject.zeroBase = 'Earth'
     scNames = ["HUBBLE SPACE TELESCOPE"]
     spiceObject.addSpacecraftNames(messaging.StringVector(scNames))
-    hst_edited_path = get_path(DataFile.EphemerisData.hst_edited)
-    spiceObject.loadSpiceKernel(str(hst_edited_path), "")
+    spiceObject.loadSpiceKernel("hst_edited.bsp", bskPath + '/supportData/EphemerisData/')
 
     # need spice to run before spacecraft module as it provides the spacecraft translational states
     scSim.AddModelToTask(simTaskName, spiceObject)
@@ -201,7 +198,7 @@ def run(show_plots):
     inertial3DObj = inertial3D.inertial3D()
     inertial3DObj.ModelTag = "inertial3D"
     scSim.AddModelToTask(simTaskName, inertial3DObj)
-    inertial3DObj.sigma_R0N = [0.0, 0.0, 0.0]  # set the desired inertial orientation
+    inertial3DObj.sigma_R0N = [0., 0., 0.]  # set the desired inertial orientation
 
     # setup the attitude tracking error evaluation module
     attError = attTrackingError.attTrackingError()
@@ -215,7 +212,7 @@ def run(show_plots):
     mrpControl.K = 3.5
     mrpControl.Ki = -1  # make value negative to turn off integral feedback
     mrpControl.P = 30.0
-    mrpControl.integralLimit = 2.0 / mrpControl.Ki * 0.1
+    mrpControl.integralLimit = 2. / mrpControl.Ki * 0.1
 
     #
     # create simulation messages
@@ -223,7 +220,8 @@ def run(show_plots):
     # The MRP Feedback algorithm requires the vehicle configuration structure. This defines various spacecraft
     # related states such as the inertia tensor and the position vector between the primary Body-fixed frame
     # B origin and the center of mass (defaulted to zero).  The message payload is created through
-    configData = messaging.VehicleConfigMsgPayload(ISCPntB_B=I)
+    configData = messaging.VehicleConfigMsgPayload()
+    configData.ISCPntB_B = I
     configDataMsg = messaging.VehicleConfigMsg().write(configData)
 
     #
@@ -241,9 +239,7 @@ def run(show_plots):
     # Setup data logging before the simulation is initialized
     #
     numDataPoints = 100
-    samplingTime = unitTestSupport.samplingTime(
-        simulationTime, simulationTimeStep, numDataPoints
-    )
+    samplingTime = unitTestSupport.samplingTime(simulationTime, simulationTimeStep, numDataPoints)
     snLog = sNavObject.scStateInMsg.recorder(samplingTime)
     attErrorLog = attError.attGuidOutMsg.recorder(samplingTime)
     mrpLog = mrpControl.cmdTorqueOutMsg.recorder(samplingTime)
@@ -258,12 +254,9 @@ def run(show_plots):
     scObject.hub.omega_BN_BInit = [[0.001], [-0.01], [0.03]]  # rad/s - omega_BN_B
 
     # if this scenario is to interface with the BSK Viz, uncomment the following line
-    vizSupport.enableUnityVisualization(
-        scSim,
-        simTaskName,
-        scObject,
-        # , saveFile=fileName
-    )
+    vizSupport.enableUnityVisualization(scSim, simTaskName, scObject
+                                        # , saveFile=fileName
+                                        )
 
     #
     #   initialize Simulation
@@ -278,7 +271,7 @@ def run(show_plots):
 
     # unload custom Spice kernel
     gravFactory.unloadSpiceKernels()
-    spiceObject.unloadSpiceKernel(str(hst_edited_path), "")
+    spiceObject.unloadSpiceKernel("hst_edited.bsp", bskPath + '/supportData/EphemerisData/')
 
     #
     #   plot the results
@@ -287,55 +280,43 @@ def run(show_plots):
     plt.close("all")  # clears out plots from earlier test runs
     plt.figure(1)
     for idx in range(3):
-        plt.plot(
-            timeAxis * macros.NANO2MIN,
-            attErrorLog.sigma_BR[:, idx],
-            color=unitTestSupport.getLineColor(idx, 3),
-            label=r"$\sigma_" + str(idx) + "$",
-        )
-    plt.legend(loc="lower right")
-    plt.xlabel("Time [min]")
-    plt.ylabel(r"Attitude Error $\sigma_{B/R}$")
+        plt.plot(timeAxis * macros.NANO2MIN, attErrorLog.sigma_BR[:, idx],
+                 color=unitTestSupport.getLineColor(idx, 3),
+                 label=r'$\sigma_' + str(idx) + '$')
+    plt.legend(loc='lower right')
+    plt.xlabel('Time [min]')
+    plt.ylabel(r'Attitude Error $\sigma_{B/R}$')
     figureList = {}
     pltName = fileName + "1"
     figureList[pltName] = plt.figure(1)
 
     plt.figure(2)
     for idx in range(3):
-        plt.plot(
-            timeAxis * macros.NANO2MIN,
-            mrpLog.torqueRequestBody[:, idx],
-            color=unitTestSupport.getLineColor(idx, 3),
-            label="$L_{r," + str(idx) + "}$",
-        )
-    plt.legend(loc="lower right")
-    plt.xlabel("Time [min]")
-    plt.ylabel(r"Control Torque $L_r$ [Nm]")
+        plt.plot(timeAxis * macros.NANO2MIN, mrpLog.torqueRequestBody[:, idx],
+                 color=unitTestSupport.getLineColor(idx, 3),
+                 label='$L_{r,' + str(idx) + '}$')
+    plt.legend(loc='lower right')
+    plt.xlabel('Time [min]')
+    plt.ylabel(r'Control Torque $L_r$ [Nm]')
     pltName = fileName + "2"
 
     plt.figure(3)
     for idx in range(3):
-        plt.plot(
-            timeAxis * macros.NANO2MIN,
-            attErrorLog.omega_BR_B[:, idx],
-            color=unitTestSupport.getLineColor(idx, 3),
-            label=r"$\omega_{BR," + str(idx) + "}$",
-        )
-    plt.legend(loc="lower right")
-    plt.xlabel("Time [min]")
-    plt.ylabel("Rate Tracking Error [rad/s] ")
+        plt.plot(timeAxis * macros.NANO2MIN, attErrorLog.omega_BR_B[:, idx],
+                 color=unitTestSupport.getLineColor(idx, 3),
+                 label=r'$\omega_{BR,' + str(idx) + '}$')
+    plt.legend(loc='lower right')
+    plt.xlabel('Time [min]')
+    plt.ylabel('Rate Tracking Error [rad/s] ')
 
     plt.figure(4)
     for idx in range(3):
-        plt.plot(
-            timeAxis * macros.NANO2MIN,
-            snLog.r_BN_N[:, idx] / 1000.0,
-            color=unitTestSupport.getLineColor(idx, 3),
-            label="$r_{BN," + str(idx) + "}$",
-        )
-    plt.legend(loc="lower right")
-    plt.xlabel("Time [min]")
-    plt.ylabel("Inertial Position [km]")
+        plt.plot(timeAxis * macros.NANO2MIN, snLog.r_BN_N[:, idx] / 1000.,
+                 color=unitTestSupport.getLineColor(idx, 3),
+                 label='$r_{BN,' + str(idx) + '}$')
+    plt.legend(loc='lower right')
+    plt.xlabel('Time [min]')
+    plt.ylabel('Inertial Position [km]')
     figureList[pltName] = plt.figure(4)
 
     if show_plots:

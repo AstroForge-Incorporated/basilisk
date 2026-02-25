@@ -17,9 +17,6 @@
 
  */
 %module("threads"=1) sim_model
-
-%include "architecture/utilities/bskException.swg"
-
 %{
    #include "sim_model.h"
 %}
@@ -66,13 +63,15 @@ namespace std {
     }
 %}
 
-%default_bsk_exception(
-    catch (const std::exception& e) {
+%exception {
+    try {
+        $action
+    } catch (const std::exception& e) {
         SWIG_exception(SWIG_RuntimeError, e.what());
     } catch (const std::string& e) {
         SWIG_exception(SWIG_RuntimeError, e.c_str());
     }
-);
+}
 
 %include "architecture/_GeneralModuleFiles/sys_model_task.h"
 %include "sys_model.h"

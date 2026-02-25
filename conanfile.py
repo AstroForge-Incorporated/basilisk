@@ -1,14 +1,12 @@
 import argparse
 import os
+import platform
 import json
 import shutil
 import subprocess
 import sys
 from datetime import datetime
 from typing import Optional, Callable
-from glob import glob
-from pathlib import Path
-from typing import Optional
 
 import importlib.metadata
 from packaging.requirements import Requirement
@@ -40,7 +38,6 @@ bskModuleOptionsBool = {
     "mujoco": [[True, False], False],
     "buildProject": [[True, False], True],
     "pyPkgCanary": [[True, False], False],
-    "recorderPropertyRollback": [[True, False], False],
 
     # XXX: Set managePipEnvironment to True to keep the old behaviour of
     # managing the `pip` environment directly (upgrading, installing Python
@@ -66,14 +63,6 @@ def is_running_virtual_env():
 
 required_conan_version = ">=2.0.5"
 
-PY_LIMITED_API_PY38  = "0x03080000"  # cp38-abi3
-
-def resolve_py_limited_api(opt_value: Optional[str]) -> str:
-    """Use explicit --pyLimitedAPI if provided, else cp38."""
-    if opt_value:
-        return opt_value
-    return PY_LIMITED_API_PY38
-
 class BasiliskConan(ConanFile):
     name = "Basilisk"
     homepage = "https://avslab.github.io/basilisk/"
@@ -89,7 +78,6 @@ class BasiliskConan(ConanFile):
     requires = [
         "eigen/3.4.0",
         "cspice/0067",
-        "cfitsio/4.6.3",
     ]
     package_type = "shared-library"
     options = {
@@ -264,14 +252,6 @@ class BasiliskConan(ConanFile):
 
     def generate(self):
         if self.settings.os == "Windows":
-            # Ensure dependent DLLs are copied into the Basilisk package
-            # directory inside the build folder so they can be discovered by
-            # packaging tools (delvewheel) and included in wheels.
-            basilisk_dst = os.path.join(self.build_folder, "Basilisk")
-            for dep in self.dependencies.values():
-                for bindir in dep.cpp_info.bindirs:
-                    copy(self, "*.dll", bindir, basilisk_dst)
-        if self.settings.os == "Windows":
             for dep in self.dependencies.values():
                 for libdir in dep.cpp_info.bindirs:
                     copy(self, "*.dll", libdir, "../Basilisk")
@@ -316,22 +296,12 @@ class BasiliskConan(ConanFile):
         if self.options.get_safe("pathToExternalModules"):
             tc.cache_variables["EXTERNAL_MODULES_PATH"] = Path(str(self.options.pathToExternalModules)).resolve().as_posix()
         tc.cache_variables["PYTHON_VERSION"] = f"{sys.version_info.major}.{sys.version_info.minor}.{sys.version_info.micro}"
-        tc.cache_variables["RECORDER_PROPERTY_ROLLBACK"] = "1" if self.options.get_safe("recorderPropertyRollback") else "0"
-
-        # get the header directory for numpy
-        import numpy
-        tc.cache_variables["NUMPY_INCLUDE_DIR"] = numpy.get_include()
-
         # Set the build rpath, since we don't install the targets, so that the
         # shared libraries can find each other using relative paths.
         tc.cache_variables["CMAKE_BUILD_RPATH_USE_ORIGIN"] = True
         # Set the minimum buildable MacOS version.
         # tc.cache_variables["CMAKE_OSX_DEPLOYMENT_TARGET"] = "10.13"
         tc.parallel = True
-
-        py_limited = resolve_py_limited_api(self.options.get_safe("pyLimitedAPI"))
-        tc.cache_variables["PY_LIMITED_API"] = py_limited
-        print(f"{statusColor}PY_LIMITED_API={py_limited}{endColor}")
 
         # Generate!
         tc.generate()
@@ -352,41 +322,6 @@ class BasiliskConan(ConanFile):
             cmake.build()
             print("Total Build Time: " + str(datetime.now() - start))
             print(f"{statusColor}The Basilisk build is successful and the scripts are ready to run{endColor}")
-            # On Windows, copy project-built DLLs next to the Python extension modules
-            # so they are bundled in the wheel and resolvable at runtime without PATH tweaks.
-            if self.settings.os == "Windows":
-                basilisk_dst_root = os.path.join(self.build_folder, "Basilisk")
-                common_srcs = [
-                    os.path.join(self.build_folder, "bin"),
-                    os.path.join(self.build_folder, "Release"),
-                    os.path.join(self.build_folder, "Debug"),
-                ]
-                for src in common_srcs:
-                    if os.path.isdir(src):
-                        try:
-                            copy(self, "*.dll", src, basilisk_dst_root)
-                        except Exception as e:
-                            self.output.warning(f"Failed to copy DLLs from {src}: {e}")
-
-                # As a fallback, scan the build tree for any remaining DLLs.
-                for root, _dirs, files in os.walk(self.build_folder):
-                    # Skip the destination to avoid self-copy
-                    if os.path.commonpath([root, basilisk_dst_root]) == basilisk_dst_root:
-                        continue
-                    if any(f.lower().endswith(".dll") for f in files):
-                        try:
-                            copy(self, "*.dll", root, basilisk_dst_root)
-                        except Exception as e:
-                            self.output.warning(f"Failed to copy DLLs from {root}: {e}")
-
-                # Rename DLLs to lowercase
-                for path in glob(os.path.join(basilisk_dst_root, "*.dll")):
-                    base = os.path.basename(path)
-                    lower = base.lower()
-                    if base != lower:
-                        tmp = os.path.join(basilisk_dst_root, f".{lower}.tmp")
-                        os.replace(path, tmp)
-                        os.replace(tmp, os.path.join(basilisk_dst_root, lower))
         else:
             print(f"{statusColor}Finished configuring the Basilisk project.{endColor}")
             if self.settings.os != "Linux":
@@ -523,10 +458,9 @@ if __name__ == "__main__":
     conanInstallList = list()
     conanInstallList.append(f'{sys.executable} -m conans.conan install . --build=missing')
     conanInstallList.append(' -s build_type=' + str(args.buildType))
+    conanInstallList.append(' -s compiler.cppstd=17')
     conanBuildOptionsList = list()  # setup list of conan build arguments
     conanBuildOptionsList.append(' -s compiler.cppstd=17')
-    if os.name != "nt":
-        conanBuildOptionsList.append(" -s compiler.cstd=gnu17")
     if args.generator:
         conanBuildOptionsList.append(' -o "&:generator=' + str(args.generator) + '"')
     for opt, value in bskModuleOptionsBool.items():

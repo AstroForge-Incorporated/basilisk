@@ -19,7 +19,6 @@
 
 %{
    #include "MJEquality.h"
-   #include "MJScene.h" // needed to support the class extension below
 %}
 
 %include "MJObject.swg"
@@ -29,9 +28,5 @@
 %ignore MJEquality::configure;
 
 %ignore MJSingleJointEquality::MJSingleJointEquality;
-
-%extend MJEquality {
-MJScene& getScene() { return $self->getSpec().getScene(); }
-}
 
 %include "MJEquality.h"

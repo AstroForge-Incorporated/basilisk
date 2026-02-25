@@ -17,10 +17,6 @@
 
  */
 %module coarseSunSensor
-
-%include "architecture/utilities/bskException.swg"
-%default_bsk_exception();
-
 %{
    #include "coarseSunSensor.h"
 %}

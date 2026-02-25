@@ -17,10 +17,6 @@ Information about the various modules or architecture files are found in :ref:`F
 
 Finally, there is the source-code itself.  That is always the ultimate guide to see what a module is doing.
 
-.. note::
-
-    If you downloaded Basilisk through ``pip install bsk``, then you can download all examples
-    to the local folder using the command line ``bskExamples``.
 
 
 .. toctree::
@@ -30,3 +26,4 @@ Finally, there is the source-code itself.  That is always the ultimate guide to 
    Learn/bskPrinciples
    examples/index
    Learn/makingModules
+

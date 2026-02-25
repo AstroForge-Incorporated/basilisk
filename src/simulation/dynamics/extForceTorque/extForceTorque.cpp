@@ -30,9 +30,6 @@ ExtForceTorque::ExtForceTorque()
     this->extForce_B.fill(0.0);
     this->extTorquePntB_B.fill(0.0);
 
-    /* this effector can be attached onto a state effector */
-    isAttachableToStateEffector = true;
-
     CallCounts = 0;
     return;
 }

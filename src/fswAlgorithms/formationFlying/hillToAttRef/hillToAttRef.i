@@ -17,10 +17,6 @@
 
  */
 %module hillToAttRef
-
-%include "architecture/utilities/bskException.swg"
-%default_bsk_exception();
-
 %{
    #include "hillToAttRef.h"
 %}
@@ -43,3 +39,4 @@ struct NavAttMsg_C;
 import sys
 protectAllClasses(sys.modules[__name__])
 %}
+

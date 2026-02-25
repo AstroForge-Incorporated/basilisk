@@ -17,10 +17,6 @@
 
  */
 %module inertial3DSpin
-
-%include "architecture/utilities/bskException.swg"
-%default_bsk_exception();
-
 %{
    #include "inertial3DSpin.h"
 %}

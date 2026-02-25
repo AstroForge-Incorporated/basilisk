@@ -17,10 +17,6 @@
 
  */
 %module mrpFeedback
-
-%include "architecture/utilities/bskException.swg"
-%default_bsk_exception();
-
 %{
    #include "mrpFeedback.h"
 %}

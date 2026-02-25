@@ -16,10 +16,6 @@ OR IN CONNECTION WITH THE USE OR PERFORMANCE OF THIS SOFTWARE.
 */
 
 %module vizInterface
-
-%include "architecture/utilities/bskException.swg"
-%default_bsk_exception();
-
 %{
    #include "vizInterface.h"
    #include "simulation/vizard/_GeneralModuleFiles/vizStructures.h"
@@ -40,7 +36,7 @@ from Basilisk.architecture.swig_common_model import *
 // Instantiate templates used by example
 namespace std {
     %template(PointLineConfig) vector<PointLine>;
-    %template(LocationConfig) vector<LocationPbMsg>;
+    %template(LocationConfig) vector<LocationPbMsg *>;
     %template(CustomModelConfig) vector<CustomModel>;
     %template(ActuatorGuiSettingsConfig) vector<ActuatorGuiSettings>;
     %template(InstrumentGuiSettingsConfig) vector<InstrumentGuiSettings>;

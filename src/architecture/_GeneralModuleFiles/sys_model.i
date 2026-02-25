@@ -1,9 +1,5 @@
 
 %module cSysModel
-
-%include "architecture/utilities/bskException.swg"
-%default_bsk_exception();
-
 %{
    #include "sys_model.h"
 %}

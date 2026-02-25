@@ -224,7 +224,9 @@ def test_AzElR_rates():
     mu = planet.mu
     planet.isCentralBody = True
     timeInitString = '2021 MAY 04 06:47:48.965 (UTC)'
-    gravFactory.createSpiceInterface(time=timeInitString)
+    gravFactory.createSpiceInterface(bskPath + '/supportData/EphemerisData/'
+                                     , timeInitString
+                                     )
     gravFactory.spiceObject.zeroBase = 'Earth'
     scSim.AddModelToTask(simTaskName, gravFactory.spiceObject, -1)
 

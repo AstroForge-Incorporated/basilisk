@@ -17,10 +17,6 @@
 
  */
 %module ephemDifference
-
-%include "architecture/utilities/bskException.swg"
-%default_bsk_exception();
-
 %{
    #include "ephemDifference.h"
 %}
@@ -39,3 +35,4 @@ struct EphemerisMsg_C;
 import sys
 protectAllClasses(sys.modules[__name__])
 %}
+

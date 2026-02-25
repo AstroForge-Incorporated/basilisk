@@ -35,11 +35,6 @@ public:
     MagneticFieldWMM();
     ~MagneticFieldWMM();
 
-    /*! Method to configure the Magnetic Field model with the data file path
-    @param file WMM source data path
-    */
-    void configureWMMFile(const std::string& file);
-
 private:
     void evaluateMagneticFieldModel(MagneticFieldMsgPayload *msg, double currentTime);
     void initializeWmm();
@@ -51,11 +46,9 @@ private:
     double gregorian2DecimalYear(double currentTime);
 
 public:
+    std::string dataPath;                   //!< -- String with the path to the WMM coefficient file
     double      epochDateFractionalYear;    //!< Specified epoch date as a fractional year
     BSKLogger bskLogger;                    //!< -- BSK Logging
-
-    /// @brief Full path to the WMM file selected by the user
-    std::string wmmDataFullPath;
 
 private:
     MAGtype_MagneticModel *magneticModel;

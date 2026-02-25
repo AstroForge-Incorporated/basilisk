@@ -206,6 +206,7 @@ function(generate_package_libraries INIT_DIRECTORY AllLibs)
 
     # Link all necessary libraries
     target_link_libraries(${LIB_NAME} PRIVATE ModuleIdGenerator)
+    target_link_libraries(${LIB_NAME} PRIVATE ${PYTHON3_MODULE})
     target_link_libraries(${LIB_NAME} PRIVATE Eigen3::Eigen3)
     if(${PARENT_DIR_NAME} STREQUAL "mujocoDynamics")
       target_link_libraries(${LIB_NAME} PUBLIC dynamicsLib)
@@ -361,11 +362,6 @@ function(generate_package_targets TARGET_LIST LIB_DEP_LIST MODULE_DIR)
       target_link_libraries(${TARGET_NAME} PRIVATE ${LIB})
     endforeach()
 
-    target_link_libraries(${TARGET_NAME} PRIVATE ${PYTHON3_MODULE})
-    if(PY_LIMITED_API AND NOT PY_LIMITED_API STREQUAL "")
-      target_compile_definitions(${TARGET_NAME} PRIVATE "Py_LIMITED_API=${PY_LIMITED_API}")
-    endif()
-
     if(${MODULE_DIR} STREQUAL "ExternalModules")
       set_target_properties(${TARGET_NAME} PROPERTIES FOLDER ${MODULE_DIR})
     else()
@@ -410,6 +406,53 @@ set(gtest_force_shared_crt ON CACHE BOOL "" FORCE)
 FetchContent_MakeAvailable(googletest)
 include(GoogleTest)
 enable_testing()
+
+
+# Function to download and move files
+function(download_and_move_file url destination)
+    get_filename_component(filename "${destination}" NAME)
+    set(temp_file "${CMAKE_BINARY_DIR}/data/${filename}")
+
+    if(NOT EXISTS "${destination}")
+        message(STATUS "File ${filename} not found, downloading from ${url}...")
+
+        # Download the file and show a progress bar
+        file(DOWNLOAD
+            "${url}"
+            "${temp_file}"
+            SHOW_PROGRESS
+            STATUS DOWNLOAD_RESULT_CODE
+        )
+
+        # Check for download errors
+        if(NOT DOWNLOAD_RESULT_CODE EQUAL 0)
+            message(FATAL_ERROR "Failed downloading ${filename}! Error code: ${DOWNLOAD_RESULT_CODE}.")
+        endif()
+
+        # Move the file into the appropriate directory
+        file(RENAME "${temp_file}" "${destination}")
+        message(STATUS "Downloaded and moved ${filename} to ${destination}.")
+    else()
+        message(STATUS "File ${filename} already exists.")
+    endif()
+endfunction()
+
+# Define download URLs and target paths
+set(SPICE_FILES
+    "https://naif.jpl.nasa.gov/pub/naif/generic_kernels/spk/planets/de430.bsp::${CMAKE_SOURCE_DIR}/../supportData/EphemerisData/de430.bsp"
+    "https://naif.jpl.nasa.gov/pub/naif/HST/kernels/spk/hst_edited.bsp::${CMAKE_SOURCE_DIR}/../supportData/EphemerisData/hst_edited.bsp"
+    "https://naif.jpl.nasa.gov/pub/naif/pds/data/nh-j_p_ss-spice-6-v1.0/nhsp_1000/data/spk/nh_pred_od077.bsp::${CMAKE_SOURCE_DIR}/../supportData/EphemerisData/nh_pred_od077.bsp"
+)
+
+# Process each large data file
+message(STATUS "Checking large Basilisk data files")
+foreach(spice_file IN LISTS SPICE_FILES)
+    string(REPLACE "::" ";" spice_parts "${spice_file}")
+    list(GET spice_parts 0 url)
+    list(GET spice_parts 1 destination)
+    download_and_move_file("${url}" "${destination}")
+endforeach()
+
 
 
 # TODO: Remove the global link-libraries call
@@ -567,7 +610,6 @@ set(ARCHITECTURE_LIBS architectureLib ArchitectureUtilities ModuleIdGenerator cM
 find_package_targets("${CMAKE_SOURCE_DIR}/simulation/dynamics" DYN_TARGETS)
 find_package_targets("${CMAKE_SOURCE_DIR}/simulation/mujocoDynamics" MULTI_BODY_DYN_TARGETS)
 find_package_targets("${CMAKE_SOURCE_DIR}/simulation/environment" ENV_TARGETS)
-find_package_targets("${CMAKE_SOURCE_DIR}/simulation/forceTorque" FORCE_TORQUE_TARGETS)
 find_package_targets("${CMAKE_SOURCE_DIR}/simulation/onboardDataHandling" DATA_TARGETS)
 find_package_targets("${CMAKE_SOURCE_DIR}/simulation/deviceInterface" DEVICE_INTERFACE_TARGETS)
 find_package_targets("${CMAKE_SOURCE_DIR}/simulation/power" POWER_TARGETS)
@@ -576,7 +618,6 @@ find_package_targets("${CMAKE_SOURCE_DIR}/simulation/sensors" SENSORS_TARGETS)
 find_package_targets("${CMAKE_SOURCE_DIR}/simulation/simSynch" SIM_SYNCH_TARGETS)
 find_package_targets("${CMAKE_SOURCE_DIR}/simulation/vizard" VIZ_INTERFACE_TARGETS)
 find_package_targets("${CMAKE_SOURCE_DIR}/simulation/thermal" THERMAL_TARGETS)
-find_package_targets("${CMAKE_SOURCE_DIR}/simulation/communication" COMMUNICATION_TARGETS)
 
 if(NOT "${EXTERNAL_MODULES_PATH}" STREQUAL "")
   string(REPLACE "\\" "/" EXTERNAL_MODULES_PATH "${EXTERNAL_MODULES_PATH}")
@@ -595,7 +636,6 @@ if(NOT ("mujocoDynamics" IN_LIST EXCLUDED_BSK_LIBRARIES))
   generate_package_targets("${MULTI_BODY_DYN_TARGETS}" "mujocoDynamicsLib;dynamicsLib;${ARCHITECTURE_LIBS}" "simulation")
 endif()
 generate_package_targets("${ENV_TARGETS}" "environmentLib;${ARCHITECTURE_LIBS};${library_dependencies}" "simulation")
-generate_package_targets("${FORCE_TORQUE_TARGETS}" "${ARCHITECTURE_LIBS};${library_dependencies}" "simulation")
 generate_package_targets("${DATA_TARGETS}" "onboardDataHandlingLib;${ARCHITECTURE_LIBS};" "simulation")
 generate_package_targets("${DEVICE_INTERFACE_TARGETS}" "${ARCHITECTURE_LIBS};" "simulation")
 generate_package_targets("${POWER_TARGETS}" "powerLib;${ARCHITECTURE_LIBS};" "simulation")
@@ -604,7 +644,6 @@ generate_package_targets("${SENSORS_TARGETS}" "${ARCHITECTURE_LIBS};" "simulatio
 generate_package_targets("${SIM_SYNCH_TARGETS}" "${ARCHITECTURE_LIBS};" "simulation")
 generate_package_targets("${VIZ_INTERFACE_TARGETS}" "${ARCHITECTURE_LIBS};" "simulation")
 generate_package_targets("${THERMAL_TARGETS}" "${ARCHITECTURE_LIBS};" "simulation")
-generate_package_targets("${COMMUNICATION_TARGETS}" "${ARCHITECTURE_LIBS};" "simulation")
 
 # FSW ALGORITHMS
 find_package_targets("${CMAKE_SOURCE_DIR}/fswAlgorithms/attControl" ATT_CONTROL_TARGETS)
@@ -672,20 +711,10 @@ if(WIN32 AND (Python3_VERSION VERSION_GREATER 3.8))
   file(WRITE "${CMAKE_BINARY_DIR}/Basilisk/__init__.py"
        "#init file written by the build\n" "import sys, os\n" "from Basilisk import __path__\n"
        "bskPath = __path__[0]\n" "os.add_dll_directory(bskPath)\n"
-       "from Basilisk.architecture import messaging\n"
-       "try:\n"
-       "    from importlib.metadata import version as _pkg_version\n"
-       "    __version__ = _pkg_version('af-basilisk')\n"
-       "except Exception:\n"
-       "    __version__ = '0.0.0'\n")
+       "from Basilisk.architecture import messaging\n")
 else()
   file(WRITE "${CMAKE_BINARY_DIR}/Basilisk/__init__.py"
-      "from Basilisk.architecture import messaging # ensure recorders() work without first importing messaging\n"
-      "try:\n"
-      "    from importlib.metadata import version as _pkg_version\n"
-      "    __version__ = _pkg_version('af-basilisk')\n"
-      "except Exception:\n"
-      "    __version__ = '0.0.0'\n")
+      "from Basilisk.architecture import messaging # ensure recorders() work without first importing messaging\n")
 endif()
 
 # TODO: Iterate through all dist directories and add __init__.py's where they don't exist

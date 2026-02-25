@@ -18,10 +18,6 @@
 */
 
 %module dipoleMapping
-
-%include "architecture/utilities/bskException.swg"
-%default_bsk_exception();
-
 %{
     #include "dipoleMapping.h"
 %}
@@ -43,3 +39,4 @@ struct MTBCmdMsg_C;
 import sys
 protectAllClasses(sys.modules[__name__])
 %}
+

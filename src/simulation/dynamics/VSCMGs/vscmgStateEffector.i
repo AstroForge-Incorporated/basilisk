@@ -17,10 +17,6 @@
 
  */
 %module vscmgStateEffector
-
-%include "architecture/utilities/bskException.swg"
-%default_bsk_exception();
-
 %{
    #include "vscmgStateEffector.h"
 %}

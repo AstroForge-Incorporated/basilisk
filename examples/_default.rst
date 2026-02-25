@@ -33,7 +33,6 @@ Orbital Simulations
    Simulating Trajectory about Multiple Celestial Bodies <scenarioPatchedConics>
    Including Custom Gravitational Bodies <scenarioCustomGravBody>
    Near-Halo Orbit Simulation <scenarioHaloOrbit>
-   Showing Ground Tracks on a Planet <scenarioGroundTracks>
 
 
 Attitude Simulations
@@ -214,20 +213,6 @@ It's recommended to study the first 6 scenarios in order:
   Solar Radiation Pressure Model on Arbitrary Surfaces <mujoco/scenarioSRPInPanels>
   Landing on Asteroid with Contact Physics <mujoco/scenarioAsteroidLanding>
   Docking between Two CubeSats <mujoco/scenarioSimpleDocking>
-  Branching Panel Deployment with Locking Mechanisms <mujoco/scenarioBranchingPanels>
-  Pointing with Reaction Wheels in MuJoCo <mujoco/scenarioAttitudeFeedbackRWMuJoCo>
-  Translation-only formation flying under differential drag <mujoco/scenarioFormationFlyingWithDrag>
-
-Constrained Spacecraft Dynamics Simulations
--------------------------------------------
-
-.. toctree::
-   :maxdepth: 1
-
-   Two Spacecraft Connected Using Holonomic Constraints <scenarioConstrainedDynamics>
-   Constraint Gain Tuning Analysis With Maneuvers <scenarioConstrainedDynamicsManeuverAnalysis>
-   Constrained Motion Component Analysis Using a Truth Model <scenarioConstrainedDynamicsComponentAnalysis>
-   Frequency Analysis of Solar Panel Resonance Using the Constraint Effector   <scenarioConstrainedDynamicsFrequencyAnalysis>
 
 Complex Spacecraft Dynamics Simulations
 ---------------------------------------
@@ -243,20 +228,10 @@ Complex Spacecraft Dynamics Simulations
    Hinged Panel Deployment <scenarioDeployingPanel>
    MSM Simulation of Charged Spacecraft <scenarioTwoChargedSC>
    Spacecraft with 1- or 2-DOF Panel using single effector <scenarioSpinningBodiesTwoDOF>
-   Robotic Arm Effector with Profiler <scenarioRoboticArm>
-   Spacecraft with an multi-link extending component <scenarioExtendingBoom>
-   Solar Array Debris Impact <scenarioImpact>
-
-Prescribed Motion Spacecraft Dynamics Simulations
--------------------------------------------------
-
-.. toctree::
-   :maxdepth: 1
-
-   Prescribed Helical Screw Motion <scenarioPrescribedScrewMotion>
    Prescribed Motion Rotational Solar Array Deployment <scenarioDeployingSolarArrays>
-   Prescribed Motion with Translating Effector Branching <scenarioPrescribedMotionWithTranslationBranching>
-   Prescribed Motion with Rotating Effector Branching <scenarioPrescribedMotionWithRotationBranching>
+   Robotic Arm Effector with Profiler <scenarioRoboticArm>
+   Two Spacecraft Connected Using Holonomic Constraints <scenarioConstrainedDynamics>
+   Spacecraft with an multi-link extending component <scenarioExtendingBoom>
 
 Mission Simulations
 ---------------------------------------
@@ -284,7 +259,6 @@ Spacecraft Formation Flying
    Attitude-Driven differential drag control <scenarioDragRendezvous>
    Servicer approaching a debris object with 3 flight modes <scenarioRendezVous>
    Walker-Delta Satellite Constellation <scenarioSatelliteConstellation>
-   Translation-only formation flying under differential drag using MuJoCo <mujoco/scenarioFormationFlyingWithDrag>
 
 Small Body Navigation Simulations
 ---------------------------------

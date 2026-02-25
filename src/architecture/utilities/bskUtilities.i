@@ -17,10 +17,6 @@
 
  */
 %module bskUtilities
-
-%include "architecture/utilities/bskException.swg"
-%default_bsk_exception();
-
 %{
    #include "architecture/utilities/macroDefinitions.h"
    #include "fswAlgorithms/fswUtilities/fswDefinitions.h"

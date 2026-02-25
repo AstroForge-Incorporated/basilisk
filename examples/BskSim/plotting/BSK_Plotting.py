@@ -126,23 +126,12 @@ def plot_rotationalNav(timeAxis, sigma_BN, omega_BN_B, id=None):
     return
 
 
-def plot_illumination_fraction(timeAxis, illumination_factor, id=None):
-    """Preferred plot for eclipse illumination fraction."""
-    plt.figure(id)
-    plt.plot(timeAxis, illumination_factor)
-    plt.xlabel('Time min')
-    plt.ylabel('Illumination Fraction')
-    return
-
-
 def plot_shadow_fraction(timeAxis, shadow_factor, id=None):
-    """
-    Backwards-compatible alias for plot_illumination_fraction.
-
-    Kept for older scenarios that still call plot_shadow_fraction.
-    """
-    # Treat shadow_factor the same way as illumination_factor for plotting.
-    return plot_illumination_fraction(timeAxis, shadow_factor, id=id)
+    plt.figure(id)
+    plt.plot(timeAxis, shadow_factor)
+    plt.xlabel('Time min')
+    plt.ylabel('Shadow Fraction')
+    return
 
 
 def plot_sun_point(timeAxis, sunPoint, id=None):

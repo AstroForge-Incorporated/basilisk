@@ -31,7 +31,6 @@ public:
     virtual ~DynamicEffector();             //!< Destructor
     virtual void computeStateContribution(double integTime);
     virtual void linkInStates(DynParamManager& states) = 0;  //!< Method to get access to other states/stateEffectors
-    virtual void linkInProperties(DynParamManager& properties);  //!< Method to get access to other properties/stateEffectors
     virtual void computeForceTorque(double integTime, double timeStep) = 0;  //!< -- Method to computeForce and torque on the body
 
 public:
@@ -41,19 +40,19 @@ public:
     Eigen::Vector3d torqueExternalPntB_B = Eigen::Vector3d::Zero(); //!< [Nm] External torque applied by this effector
 
     /** setter for `stateNameOfPosition` property */
-    virtual void setStateNameOfPosition(std::string value);
+    void setStateNameOfPosition(std::string value);
     /** getter for `stateNameOfPosition` property */
     const std::string getStateNameOfPosition() const {return this->stateNameOfPosition; }
     /** setter for `stateNameOfVelocity` property */
-    virtual void setStateNameOfVelocity(std::string value);
+    void setStateNameOfVelocity(std::string value);
     /** getter for `stateNameOfVelocity` property */
     const std::string getStateNameOfVelocity() const { return this->stateNameOfVelocity; }
     /** setter for `stateNameOfSigma` property */
-    virtual void setStateNameOfSigma(std::string value);
+    void setStateNameOfSigma(std::string value);
     /** getter for `stateNameOfSigma` property */
     const std::string getStateNameOfSigma() const { return this->stateNameOfSigma; }
     /** setter for `stateNameOfOmega` property */
-    virtual void setStateNameOfOmega(std::string value);
+    void setStateNameOfOmega(std::string value);
     /** getter for `stateNameOfOmega` property */
     const std::string getStateNameOfOmega() const { return this->stateNameOfOmega; }
     /** setter for `propName_m_SC` property */
@@ -85,21 +84,13 @@ public:
     /** getter for `propName_centerOfMassDotSC` property */
     const std::string getPropName_centerOfMassDotSC() const { return this->propName_centerOfMassDotSC; }
     /** setter for `propName_inertialPosition` property */
-    virtual void setPropName_inertialPosition(std::string value);
+    void setPropName_inertialPosition(std::string value);
     /** getter for `propName_inertialPosition` property */
     const std::string getPropName_inertialPosition() const { return this->propName_inertialPosition; }
     /** setter for `propName_inertialVelocity` property */
-    virtual void setPropName_inertialVelocity(std::string value);
+    void setPropName_inertialVelocity(std::string value);
     /** getter for `propName_inertialVelocity` property */
     const std::string getPropName_inertialVelocity() const { return this->propName_inertialVelocity; }
-    /** setter for `propName_inertialAttitude` property */
-    virtual void setPropName_inertialAttitude(std::string value);
-    /** getter for `propName_inertialAttitude` property */
-    const std::string getPropName_inertialAttitude() const { return this->propName_inertialAttitude; }
-    /** setter for `propName_inertialAngVelocity` property */
-    virtual void setPropName_inertialAngVelocity(std::string value);
-    /** getter for `propName_inertialAngVelocity` property */
-    const std::string getPropName_inertialAngVelocity() const { return this->propName_inertialAngVelocity; }
     /** setter for `propName_vehicleGravity` property */
     void setPropName_vehicleGravity(std::string value);
     /** getter for `propName_vehicleGravity` property */
@@ -122,11 +113,8 @@ protected:
     std::string propName_centerOfMassDotSC = "";                    //!< property name of centerOfMassDotSC
     std::string propName_inertialPosition = "";                     //!< property name of inertialPosition
     std::string propName_inertialVelocity = "";                     //!< property name of inertialVelocity
-    std::string propName_inertialAttitude = "";                     //!< property name of inertialAttitude
-    std::string propName_inertialAngVelocity = "";                  //!< property name of inertialAngVelocity
     std::string propName_vehicleGravity = "";                       //!< property name of vehicleGravity
 
-    bool isAttachableToStateEffector = false;      //!< Whether or not this effector can be attached onto a state effector
 };
 
 

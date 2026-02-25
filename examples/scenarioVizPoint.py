@@ -183,14 +183,13 @@ def run(show_plots, missionType, saveVizardFile):
         spiceObject.zeroBase = 'earth'
         scSim.AddModelToTask(simTaskName, spiceObject)
         # Setup Camera.
-        cameraConfig = messaging.CameraConfigMsgPayload(
-            cameraID=1,
-            renderRate=0,
-            sigma_CB=[-0.333333, 0.333333, -0.333333],
-            cameraPos_B=[5000. * 1E-3, 0., 0.], # m
-            fieldOfView=0.62*macros.D2R, # rad
-            resolution=[2048, 2048], # pixels
-        )
+        cameraConfig = messaging.CameraConfigMsgPayload()
+        cameraConfig.cameraID = 1
+        cameraConfig.renderRate = 0
+        cameraConfig.sigma_CB = [-0.333333, 0.333333, -0.333333]
+        cameraConfig.cameraPos_B = [5000. * 1E-3, 0., 0.]  # in meters
+        cameraConfig.fieldOfView = 0.62*macros.D2R  # in degrees
+        cameraConfig.resolution = [2048, 2048]  # in pixels
     else:
         simulationTime = macros.min2nano(6.25)
         gravFactory = simIncludeGravBody.gravBodyFactory()
@@ -198,14 +197,13 @@ def run(show_plots, missionType, saveVizardFile):
         mars = gravFactory.createMarsBarycenter()
         mars.isCentralBody = True  # ensure this is the central gravitational body
         mu = mars.mu
-        cameraConfig = messaging.CameraConfigMsgPayload(
-            cameraID=1,
-            renderRate=0,
-            sigma_CB=[-0.333333, 0.333333, -0.333333],
-            cameraPos_B=[5000. * 1E-3, 0., 0.], # m
-            fieldOfView=50.*macros.D2R, # rad
-            resolution=[512, 512], # pixels
-        )
+        cameraConfig = messaging.CameraConfigMsgPayload()
+        cameraConfig.cameraID = 1
+        cameraConfig.renderRate = 0
+        cameraConfig.sigma_CB = [-0.333333, 0.333333, -0.333333]
+        cameraConfig.cameraPos_B = [5000. * 1E-3, 0., 0.]  # in meters
+        cameraConfig.fieldOfView = 50.*macros.D2R
+        cameraConfig.resolution = [512, 512]  # in pixels
     camMsg = messaging.CameraConfigMsg().write(cameraConfig)
 
     #
@@ -272,8 +270,8 @@ def run(show_plots, missionType, saveVizardFile):
         earthPoint = np.array([0.,0.,0.1])
 
     # create the FSW vehicle configuration message
-    # use the same inertia in the FSW algorithm as in the simulation
-    vehicleConfigOut = messaging.VehicleConfigMsgPayload(ISCPntB_B=I)
+    vehicleConfigOut = messaging.VehicleConfigMsgPayload()
+    vehicleConfigOut.ISCPntB_B = I  # use the same inertia in the FSW algorithm as in the simulation
     vcMsg = messaging.VehicleConfigMsg().write(vehicleConfigOut)
 
     # setup inertial3D guidance module
@@ -342,7 +340,7 @@ def run(show_plots, missionType, saveVizardFile):
         viz = vizSupport.enableUnityVisualization(scSim, simTaskName, scObject,
                                                   saveFile=fileNamePath)
         viz.addCamMsgToModule(camMsg)
-        viz.settings.viewCameraFrustumHUD = 1
+        viz.settings.viewCameraConeHUD = 1
     scSim.InitializeSimulation()
 
     #

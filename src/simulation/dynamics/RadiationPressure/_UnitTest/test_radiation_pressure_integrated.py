@@ -79,7 +79,8 @@ def radiationPressureIntegratedTest(show_plots):
     planet.isCentralBody = True
     mu = planet.mu
     gravFactory.createSun()
-    gravFactory.createSpiceInterface(time='2021 MAY 04 07:47:49.965 (UTC)')
+    spice_path = bskPath + '/supportData/EphemerisData/'
+    gravFactory.createSpiceInterface(spice_path, '2021 MAY 04 07:47:49.965 (UTC)')
     gravFactory.spiceObject.zeroBase = 'Earth'
     sim.AddModelToTask(simTaskName, gravFactory.spiceObject, -1)
     srp.sunEphmInMsg.subscribeTo(gravFactory.spiceObject.planetStateOutMsgs[1])

@@ -17,10 +17,6 @@
 
  */
 %module thrustRWDesat
-
-%include "architecture/utilities/bskException.swg"
-%default_bsk_exception();
-
 %{
    #include "thrustRWDesat.h"
 %}
@@ -43,3 +39,4 @@ struct THRArrayOnTimeCmdMsg_C;
 import sys
 protectAllClasses(sys.modules[__name__])
 %}
+

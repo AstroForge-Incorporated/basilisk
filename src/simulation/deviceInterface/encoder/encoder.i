@@ -17,10 +17,6 @@
 
  */
 %module encoder
-
-%include "architecture/utilities/bskException.swg"
-%default_bsk_exception();
-
 %{
    #include "encoder.h"
 %}

@@ -14,7 +14,6 @@
 # ACTION OF CONTRACT, NEGLIGENCE OR OTHER TORTIOUS ACTION, ARISING OUT OF
 # OR IN CONNECTION WITH THE USE OR PERFORMANCE OF THIS SOFTWARE.
 
-from pathlib import Path
 from typing import Optional
 from typing import Dict
 from typing import Iterable
@@ -41,14 +40,11 @@ from Basilisk.simulation.gravityEffector import (
 from Basilisk.utilities import unitTestSupport
 
 from Basilisk.utilities.deprecated import deprecationWarn
-from Basilisk.utilities.supportDataTools.dataFetcher import get_path, DataFile, POOCH
 
 # this statement is needed to enable Windows to print ANSI codes in the Terminal
 # see https://stackoverflow.com/questions/287871/how-to-print-colored-text-in-terminal-in-python/3332860#3332860
 import os
-
 os.system("")
-
 
 @dataclass
 class BodyData:
@@ -82,8 +78,8 @@ BODY_DATA = {
         planetName="sun_planet_data",
         displayName="sun",
         modelDictionaryKey="",
-        mu=astroConstants.MU_SUN * 1e9,
-        radEquator=astroConstants.REQ_SUN * 1e3,
+        mu=astroConstants.MU_SUN*1e9,
+        radEquator=astroConstants.REQ_SUN*1e3,
         spicePlanetFrame="IAU_sun",
     ),
     "mercury": BodyData(
@@ -91,8 +87,8 @@ BODY_DATA = {
         planetName="mercury_planet_data",
         displayName="mercury",
         modelDictionaryKey="",
-        mu=astroConstants.MU_MERCURY * 1e9,
-        radEquator=astroConstants.REQ_MERCURY * 1e3,
+        mu=astroConstants.MU_MERCURY*1e9,
+        radEquator=astroConstants.REQ_MERCURY*1e3,
         spicePlanetFrame="IAU_mercury",
     ),
     "venus": BodyData(
@@ -100,8 +96,8 @@ BODY_DATA = {
         planetName="venus_planet_data",
         displayName="venus",
         modelDictionaryKey="",
-        mu=astroConstants.MU_VENUS * 1e9,
-        radEquator=astroConstants.REQ_VENUS * 1e3,
+        mu=astroConstants.MU_VENUS*1e9,
+        radEquator=astroConstants.REQ_VENUS*1e3,
         spicePlanetFrame="IAU_venus",
     ),
     "earth": BodyData(
@@ -109,8 +105,8 @@ BODY_DATA = {
         planetName="earth_planet_data",
         displayName="earth",
         modelDictionaryKey="",
-        mu=astroConstants.MU_EARTH * 1e9,
-        radEquator=astroConstants.REQ_EARTH * 1e3,
+        mu=astroConstants.MU_EARTH*1e9,
+        radEquator=astroConstants.REQ_EARTH*1e3,
         spicePlanetFrame="IAU_earth",
     ),
     "moon": BodyData(
@@ -118,8 +114,8 @@ BODY_DATA = {
         planetName="moon_planet_data",
         displayName="moon",
         modelDictionaryKey="",
-        mu=astroConstants.MU_MOON * 1e9,
-        radEquator=astroConstants.REQ_MOON * 1e3,
+        mu=astroConstants.MU_MOON*1e9,
+        radEquator=astroConstants.REQ_MOON*1e3,
         spicePlanetFrame="IAU_moon",
     ),
     "mars": BodyData(
@@ -127,8 +123,8 @@ BODY_DATA = {
         planetName="mars_planet_data",
         displayName="mars",
         modelDictionaryKey="",
-        mu=astroConstants.MU_MARS * 1e9,
-        radEquator=astroConstants.REQ_MARS * 1e3,
+        mu=astroConstants.MU_MARS*1e9,
+        radEquator=astroConstants.REQ_MARS*1e3,
         spicePlanetFrame="IAU_mars",
     ),
     "mars barycenter": BodyData(
@@ -136,8 +132,8 @@ BODY_DATA = {
         planetName="mars barycenter_planet_data",
         displayName="mars barycenter",
         modelDictionaryKey="",
-        mu=astroConstants.MU_MARS * 1e9,
-        radEquator=astroConstants.REQ_MARS * 1e3,
+        mu=astroConstants.MU_MARS*1e9,
+        radEquator=astroConstants.REQ_MARS*1e3,
         spicePlanetFrame="IAU_mars",
     ),
     "jupiter barycenter": BodyData(
@@ -145,8 +141,8 @@ BODY_DATA = {
         planetName="jupiter barycenter_planet_data",
         displayName="jupiter",
         modelDictionaryKey="",
-        mu=astroConstants.MU_JUPITER * 1e9,
-        radEquator=astroConstants.REQ_JUPITER * 1e3,
+        mu=astroConstants.MU_JUPITER*1e9,
+        radEquator=astroConstants.REQ_JUPITER*1e3,
         spicePlanetFrame="IAU_jupiter",
     ),
     "saturn": BodyData(
@@ -154,8 +150,8 @@ BODY_DATA = {
         planetName="saturn barycenter_planet_data",
         displayName="saturn",
         modelDictionaryKey="",
-        mu=astroConstants.MU_SATURN * 1e9,
-        radEquator=astroConstants.REQ_SATURN * 1e3,
+        mu=astroConstants.MU_SATURN*1e9,
+        radEquator=astroConstants.REQ_SATURN*1e3,
         spicePlanetFrame="IAU_saturn",
     ),
     "uranus": BodyData(
@@ -163,8 +159,8 @@ BODY_DATA = {
         planetName="uranus barycenter_planet_data",
         displayName="uranus",
         modelDictionaryKey="",
-        mu=astroConstants.MU_URANUS * 1e9,
-        radEquator=astroConstants.REQ_URANUS * 1e3,
+        mu=astroConstants.MU_URANUS*1e9,
+        radEquator=astroConstants.REQ_URANUS*1e3,
         spicePlanetFrame="IAU_uranus",
     ),
     "neptune": BodyData(
@@ -172,8 +168,8 @@ BODY_DATA = {
         planetName="neptune barycenter_planet_data",
         displayName="neptune",
         modelDictionaryKey="",
-        mu=astroConstants.MU_NEPTUNE * 1e9,
-        radEquator=astroConstants.REQ_NEPTUNE * 1e3,
+        mu=astroConstants.MU_NEPTUNE*1e9,
+        radEquator=astroConstants.REQ_NEPTUNE*1e3,
         spicePlanetFrame="IAU_neptune",
     ),
 }
@@ -182,11 +178,6 @@ BODY_DATA = {
 @runtime_checkable
 class WithGravField(Protocol):
     gravField: Any  # cannot be GravityEffector because SWIG classes dont give type info
-
-
-def _ensure_trailing_sep(path: str) -> str:
-    path = str(path)
-    return path if path.endswith(os.sep) else path + os.sep
 
 
 class gravBodyFactory:
@@ -357,12 +348,12 @@ class gravBodyFactory:
         self,
         path: str,
         time: str,
-        spiceKernelFileNames: Iterable[DataFile.EphemerisData] = (
-            DataFile.EphemerisData.de430,
-            DataFile.EphemerisData.naif0012,
-            DataFile.EphemerisData.de_403_masses,
-            DataFile.EphemerisData.pck00010,
-        ),
+        spiceKernelFileNames: Iterable[str] = [
+                                              "de430.bsp",
+                                              "naif0012.tls",
+                                              "de-403-masses.tpc",
+                                              "pck00010.tpc",
+                                              ],
         spicePlanetNames: Optional[Sequence[str]] = None,
         spicePlanetFrames: Optional[Sequence[str]] = None,
         epochInMsg: bool = False,
@@ -398,12 +389,12 @@ class gravBodyFactory:
         *,
         path: str = "%BSK_PATH%/supportData/EphemerisData/",
         time: str,
-        spiceKernelFileNames: Iterable[DataFile.EphemerisData] = (
-            DataFile.EphemerisData.de430,
-            DataFile.EphemerisData.naif0012,
-            DataFile.EphemerisData.de_403_masses,
-            DataFile.EphemerisData.pck00010,
-        ),
+        spiceKernelFileNames: Iterable[str] = [
+                                              "de430.bsp",
+                                              "naif0012.tls",
+                                              "de-403-masses.tpc",
+                                              "pck00010.tpc",
+                                              ],
         spicePlanetNames: Optional[Sequence[str]] = None,
         spicePlanetFrames: Optional[Sequence[str]] = None,
         epochInMsg: bool = False,
@@ -441,16 +432,16 @@ class gravBodyFactory:
         self,
         path: str = "%BSK_PATH%/supportData/EphemerisData/",
         time: str = "",
-        spiceKernelFileNames: Iterable[DataFile.EphemerisData] = (
-            DataFile.EphemerisData.de430,
-            DataFile.EphemerisData.naif0012,
-            DataFile.EphemerisData.de_403_masses,
-            DataFile.EphemerisData.pck00010,
-        ),
+        spiceKernelFileNames: Iterable[str] = [
+                                              "de430.bsp",
+                                              "naif0012.tls",
+                                              "de-403-masses.tpc",
+                                              "pck00010.tpc",
+                                              ],
         spicePlanetNames: Optional[Sequence[str]] = None,
         spicePlanetFrames: Optional[Sequence[str]] = None,
         epochInMsg: bool = False,
-        spiceKernalFileNames=None,
+        spiceKernalFileNames = None,
     ) -> spiceInterface.SpiceInterface:
         if time == "":
             raise ValueError(
@@ -462,60 +453,45 @@ class gravBodyFactory:
             deprecationWarn(
                 f"{gravBodyFactory.createSpiceInterface.__qualname__}.spiceKernalFileNames"
                 "2024/11/24",
-                "The argument 'spiceKernalFileNames' is deprecated. Use 'spiceKernelFileNames'",
+                "The argument 'spiceKernalFileNames' is deprecated, as it is a "
+                "misspelling of 'spiceKernelFileNames'"
             )
 
-        if isinstance(path, str) and "%BSK_PATH%" in path:
-            path = path.replace("%BSK_PATH%", list(__path__)[0])
+        path = path.replace("%BSK_PATH%", list(__path__)[0])
 
-        path = Path(path).expanduser().resolve()
-
-        self.spiceObject = spiceInterface.SpiceInterface()
-        self.spiceObject.ModelTag = "SpiceInterfaceData"
-        self.spiceObject.SPICEDataPath = (
-            str(Path(POOCH.abspath) / "supportData" / "EphemerisData") + os.sep
-        )
         self.spiceKernelFileNames.extend(spiceKernelFileNames)
         self.spicePlanetNames = list(spicePlanetNames or self.gravBodies)
         if spicePlanetFrames is not None:
             self.spicePlanetFrames = list(spicePlanetFrames)
 
+        self.spiceObject = spiceInterface.SpiceInterface()
+        self.spiceObject.ModelTag = "SpiceInterfaceData"
+        self.spiceObject.SPICEDataPath = path
         self.spiceObject.addPlanetNames(self.spicePlanetNames)
         self.spiceObject.UTCCalInit = time
         if len(self.spicePlanetFrames) > 0:
             self.spiceObject.planetFrames = list(self.spicePlanetFrames)
 
         self.spiceObject.SPICELoaded = True
-        for file_enum in set(self.spiceKernelFileNames):
-            # Resolve the file path using pooch if possible
-            try:
-                resolved_path = Path(get_path(file_enum)).resolve()
-            except Exception:
-                # Fallback, use the kernel filename directly inside SPICEDataPath
-                fname = getattr(file_enum, "value", str(file_enum))
-                resolved_path = (Path(self.spiceObject.SPICEDataPath) / fname).resolve()
-
-            # Absolute filename SPICE should load
-            full_kernel_path = str(resolved_path)
-
-            # ALWAYS load using the full path.
-            resolved_dir = str(resolved_path.parent) + os.sep
-            resolved_name = resolved_path.name
-            load_failed = self.spiceObject.loadSpiceKernel(resolved_name, resolved_dir)
-
-            if load_failed:
+        for fileName in set(self.spiceKernelFileNames):
+            if self.spiceObject.loadSpiceKernel(fileName, path):
+                # error occured loading spice kernel
                 self.spiceObject.SPICELoaded = False
-                print(f"\033[91mERROR loading kernel:\033[0m {full_kernel_path}")
+                if fileName == "de430.bsp":
+                    print("\033[91mERROR loading the large file de430.bsp:\033[0m  If BSK was "
+                          "installed via a wheel, try running bskLargeData from the console to "
+                          "install the large BSK data files.\n")
 
-        #  Hook grav bodies to the SPICE messages
+        # subscribe Grav Body data to the spice state message
         for c, gravBodyDataItem in enumerate(self.gravBodies.values()):
             gravBodyDataItem.planetBodyInMsg.subscribeTo(
                 self.spiceObject.planetStateOutMsgs[c]
             )
 
+        # create and connect to an epoch input message
         if epochInMsg:
             self.epochMsg = unitTestSupport.timeStringToGregorianUTCMsg(
-                time, dataPath=str(path)
+                time, dataPath=path
             )
             self.spiceObject.epochInMsg.subscribeTo(self.epochMsg)
 
@@ -525,12 +501,8 @@ class gravBodyFactory:
         """Method to unload spice kernals at the end of a simulation."""
         if self.spiceObject is None:
             return
-        for file_enum in set(self.spiceKernelFileNames):
-            # Convert enum → string filename
-            fname = getattr(file_enum, "value", str(file_enum))
-
-            d = _ensure_trailing_sep(self.spiceObject.SPICEDataPath)
-            self.spiceObject.unloadSpiceKernel(fname, d)
+        for fileName in set(self.spiceKernelFileNames):
+            self.spiceObject.unloadSpiceKernel(fileName, self.spiceObject.SPICEDataPath)
 
 
 def loadGravFromFile(

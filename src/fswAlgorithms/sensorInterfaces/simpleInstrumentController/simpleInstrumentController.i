@@ -17,10 +17,6 @@
 
  */
 %module simpleInstrumentController
-
-%include "architecture/utilities/bskException.swg"
-%default_bsk_exception();
-
 %{
 #include "simpleInstrumentController.h"
 %}
