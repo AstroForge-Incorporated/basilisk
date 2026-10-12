@@ -63,6 +63,7 @@ private:
     void computeBangCoastBangParameters();                                                                                              //!< Method for computing the required parameters for the non-smoothed bang-coast-bang profiler option
     double computeTimeForTransitionBetweenRates(double theta_dot_initial, double theta_dot_final) const;                                //!< Method for computing time to transition between angular rates with constant acceleration
     double computeAngularDisplacementWithConstAccel(double delta_t) const;                                                              //!< Method for computing angular displacement over time with constant acceleration
+    double computeAngularDisplacementWithConstRate(double theta_dot, double delta_t) const;                                             //!< Method for computing angular displacement over time with constant angular rate
     double computeReachablePeakAngularRate(double deltaThetaTotal, double thetaDotInit, double thetaDotRef, double thetaDDotMax) const; //!< Method for computing the reachable peak angular rate during the maneuver
     void computeAngularKinematics(double t, double thetaDDot, double t_0, double theta_0, double thetaDot_0);                           //!< Computing the angular kinematics of the body
 
