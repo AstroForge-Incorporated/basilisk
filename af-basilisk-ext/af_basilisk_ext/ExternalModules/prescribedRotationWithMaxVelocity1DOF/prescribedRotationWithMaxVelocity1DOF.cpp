@@ -131,6 +131,16 @@ double PrescribedRotationWithMaxVelocity1DOF::computeAngularDisplacementWithCons
     return 0.5 * this->rotationDirection * this->thetaDDotMax * pow(delta_t, 2);
 }
 
+/*! Computes angular displacement over a time interval assuming constant angular rate
+    @param theta_dot [rad/s] Constant angular rate
+    @param delta_t [s] Time interval over which to compute angular displacement
+    @return double [rad] Angular displacement over the time interval
+*/
+double PrescribedRotationWithMaxVelocity1DOF::computeAngularDisplacementWithConstRate(double theta_dot, double delta_t) const
+{
+    return theta_dot * delta_t;
+}
+
 //! This intermediate method groups the calculation of rotation parameters into a single method.
 void PrescribedRotationWithMaxVelocity1DOF::computeRotationParameters()
 {
@@ -141,8 +151,8 @@ void PrescribedRotationWithMaxVelocity1DOF::computeRotationParameters()
     double dt_b1_temp = this->computeTimeForTransitionBetweenRates(this->thetaDotInit, this->rotationDirection * this->thetaDotMax);
     double dt_b2_temp = this->computeTimeForTransitionBetweenRates(this->rotationDirection * this->thetaDotMax, this->thetaDotRef);
 
-    // Angular displacement during acceleration/deceleration phases, assuming we go to the maximum configured angular rate
-    double deltaTheta_b1_temp = this->computeAngularDisplacementWithConstAccel(dt_b1_temp);
+    // Angular displacement during acceleration/deceleration phases, assuming we go to the maximum configured angular rate, including any nonzero initial rate
+    double deltaTheta_b1_temp = this->computeAngularDisplacementWithConstAccel(dt_b1_temp) + this->computeAngularDisplacementWithConstRate(this->thetaDotInit, dt_b1_temp);
     double deltaTheta_b2_temp = this->computeAngularDisplacementWithConstAccel(dt_b2_temp);
 
     // is the total angular displacement required to accelerate to and decelerate
@@ -195,8 +205,8 @@ void PrescribedRotationWithMaxVelocity1DOF::computeBangBangParameters()
     this->dt_b1 = this->computeTimeForTransitionBetweenRates(this->thetaDotInit, this->rotationDirection * thetaDot_peak);
     this->dt_b2 = this->computeTimeForTransitionBetweenRates(this->rotationDirection * thetaDot_peak, this->thetaDotRef);
 
-    // Angular displacement during the first bang segment
-    this->deltaTheta_b1 = this->computeAngularDisplacementWithConstAccel(this->dt_b1);
+    // Angular displacement during the first bang segment, including any nonzero initial rate
+    this->deltaTheta_b1 = this->computeAngularDisplacementWithConstAccel(this->dt_b1) + this->computeAngularDisplacementWithConstRate(this->thetaDotInit, this->dt_b1);
 
     // Time and angular position at the end of the first bang segment
     this->t_b1_final = this->tInit + this->dt_b1;
