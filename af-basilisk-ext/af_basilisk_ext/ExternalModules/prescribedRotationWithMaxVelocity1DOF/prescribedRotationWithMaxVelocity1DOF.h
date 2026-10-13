@@ -64,6 +64,7 @@ private:
     double computeTimeForTransitionBetweenRates(double theta_dot_initial, double theta_dot_final) const;                                //!< Method for computing time to transition between angular rates with constant acceleration
     double computeAngularDisplacementWithConstAccel(double delta_t) const;                                                              //!< Method for computing angular displacement over time with constant acceleration
     double computeAngularDisplacementWithConstRate(double theta_dot, double delta_t) const;                                             //!< Method for computing angular displacement over time with constant angular rate
+    double computeStoppingAngularDisplacement() const;                                                                                 //!< Method for computing signed angular displacement to stop at maximum deceleration
     double computeReachablePeakAngularRate(double deltaThetaTotal, double thetaDotInit, double thetaDotRef, double thetaDDotMax) const; //!< Method for computing the reachable peak angular rate during the maneuver
     void computeAngularKinematics(double t, double thetaDDot, double t_0, double theta_0, double thetaDot_0);                           //!< Computing the angular kinematics of the body
 
@@ -114,7 +115,7 @@ private:
     double t_b2_init = 0.0;  //!< [s] Simulation time at the start of the second bang segment
 
     bool convergence = true;        //!< Boolean variable is true when the rotation is complete
-    double rotationDirection = 1.0; //!< Direction of rotation (+1 or -1)
+    double rotationDirection = 1.0; //!< Direction of first-segment acceleration and peak rate (+1 or -1)
     bool useCoastSegment = false;   //!< [bool] True if coast segment is used in profile
 };
 
