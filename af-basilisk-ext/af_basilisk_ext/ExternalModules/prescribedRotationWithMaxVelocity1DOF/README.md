@@ -14,3 +14,9 @@ A target change beyond `newTargetAngularThreshold` can arrive mid-rotation, so t
 far the first segment actually turns when it is integrated. Without the `thetaDotInit * dt_b1` term, the next segment
 would start that far short of the body's actual angle, and the body would jump back by that amount when the first
 segment ends.
+
+## Targets inside the stopping distance
+
+An accepted target ahead of the body can be too close to stop at within the acceleration limit.
+In this case, the body brakes, passes the target, reverses, and returns to rest at the target.
+The existing bang-bang profile handles this motion without an extra segment.

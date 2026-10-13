@@ -22,6 +22,7 @@
 #include "architecture/utilities/macroDefinitions.h"
 #include "architecture/utilities/rigidBodyKinematics.h"
 #include "prescribedRotationWithMaxVelocity1DOF.h"
+#include <algorithm>
 #include <cmath>
 #include <iostream>
 
@@ -141,11 +142,21 @@ double PrescribedRotationWithMaxVelocity1DOF::computeAngularDisplacementWithCons
     return theta_dot * delta_t;
 }
 
+/*! Computes the signed angular displacement required to stop at maximum deceleration
+    @return double [rad] Stopping displacement with the sign of the initial angular rate
+*/
+double PrescribedRotationWithMaxVelocity1DOF::computeStoppingAngularDisplacement() const
+{
+    return this->thetaDotInit * fabs(this->thetaDotInit) / (2.0 * this->thetaDDotMax);
+}
+
 //! This intermediate method groups the calculation of rotation parameters into a single method.
 void PrescribedRotationWithMaxVelocity1DOF::computeRotationParameters()
 {
     this->deltaThetaTotal = this->thetaRef - this->thetaInit;
-    this->rotationDirection = (this->deltaThetaTotal >= 0.0) ? 1.0 : -1.0;
+
+    // Targets before the stopping point require braking past the target and reversing
+    this->rotationDirection = (this->deltaThetaTotal - this->computeStoppingAngularDisplacement() >= 0.0) ? 1.0 : -1.0;
 
     // Calculates the time required to accelerate from the initial angular rate to the maximum configured rate, then decelerate to the target final rate
     double dt_b1_temp = this->computeTimeForTransitionBetweenRates(this->thetaDotInit, this->rotationDirection * this->thetaDotMax);
@@ -192,7 +203,12 @@ void PrescribedRotationWithMaxVelocity1DOF::computeRotationParameters()
 */
 double PrescribedRotationWithMaxVelocity1DOF::computeReachablePeakAngularRate(double deltaThetaTotal, double thetaDotInit, double thetaDotRef, double thetaDDotMax) const
 {
-    return sqrt(thetaDDotMax * fabs(deltaThetaTotal) + 0.5 * (pow(thetaDotInit, 2) + pow(thetaDotRef, 2)));
+    // Squared angular speed at the switch from the first bang to the second bang
+    // Use signed acceleration because the first bang can brake opposite to the target displacement
+    double switchingAngularRateSquared = this->rotationDirection * thetaDDotMax * deltaThetaTotal + 0.5 * (pow(thetaDotInit, 2) + pow(thetaDotRef, 2));
+    
+    // When the target is near the stopping point, rounding can make this value slightly negative, so clamp it to zero
+    return sqrt(std::max(switchingAngularRateSquared, 0.0));
 }
 
 //! This method computes the required parameters for the rotation with a non-smoothed bang-bang acceleration profile.
