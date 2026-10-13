@@ -93,7 +93,8 @@ void PrescribedRotationWithMaxVelocity1DOF::UpdateState(uint64_t callTime)
         this->thetaRef = spinningBodyIn.theta;
 
         // Set the parameters required to profile the rotation
-        if (this->thetaInit != this->thetaRef)
+        // is current angle different from desired angle OR is current rate different from desired rate?
+        if (this->thetaInit != this->thetaRef || this->thetaDotInit != this->thetaDotRef)
         {
             this->computeRotationParameters();
         }
