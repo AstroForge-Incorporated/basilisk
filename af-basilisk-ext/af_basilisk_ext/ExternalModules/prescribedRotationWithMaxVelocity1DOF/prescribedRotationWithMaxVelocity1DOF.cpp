@@ -270,7 +270,7 @@ void PrescribedRotationWithMaxVelocity1DOF::computeCurrentState(double t)
 bool PrescribedRotationWithMaxVelocity1DOF::isInFirstBangSegment(double t) const
 {
     // is current time before end of first bang segment AND is total maneuver duration non-zero?
-    return (t <= this->t_b1_final && this->t_f - this->tInit != 0.0);
+    return (t < this->t_b1_final && this->t_f - this->tInit != 0.0);
 }
 
 /*! This method determines if the current time is within the second bang segment.
@@ -279,8 +279,8 @@ bool PrescribedRotationWithMaxVelocity1DOF::isInFirstBangSegment(double t) const
 */
 bool PrescribedRotationWithMaxVelocity1DOF::isInSecondBangSegment(double t) const
 {
-    // is current time after start of second bang segment AND before end of maneuver AND is total maneuver duration non-zero?
-    return (t > this->t_b2_init && t <= this->t_f && this->t_f - this->tInit != 0.0);
+    // is current time at or after start of second bang segment AND before end of maneuver AND is total maneuver duration non-zero?
+    return (t >= this->t_b2_init && t < this->t_f && this->t_f - this->tInit != 0.0);
 }
 
 /*! This method determines if the current time is within the coast segment.
@@ -289,8 +289,8 @@ bool PrescribedRotationWithMaxVelocity1DOF::isInSecondBangSegment(double t) cons
 */
 bool PrescribedRotationWithMaxVelocity1DOF::isInCoastSegment(double t) const
 {
-    // is current time after first bang ends and before coast ends and is total maneuver duration non-zero?
-    return (t > this->t_b1_final && t <= this->t_b2_init && this->t_f - this->tInit != 0.0);
+    // is current time at or after first bang ends and before coast ends and is total maneuver duration non-zero?
+    return (t >= this->t_b1_final && t < this->t_b2_init && this->t_f - this->tInit != 0.0);
 }
 
 /*! Computes angular position and rate at time `t` assuming constant acceleration.
